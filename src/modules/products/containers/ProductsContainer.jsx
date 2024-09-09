@@ -4,31 +4,29 @@ import {useTranslation} from "react-i18next";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
-import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
-import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Switch, Table, Typography} from "antd";
+import {Button, Input, Pagination, Row, Space, Table, Typography, Upload} from "antd";
 import Container from "../../../components/Container.jsx";
-import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
-import CreateEditProduct from "../components/CreateEditProduct.jsx";
+import {UploadOutlined} from "@ant-design/icons";
+import usePostQuery from "../../../hooks/api/usePostQuery.js";
 const { Link } = Typography;
 const ProductsContainer = () => {
     const { t } = useTranslation();
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(10);
-    const [itemData, setItemData] = useState(null);
     const [searchKey,setSearchKey] = useState();
-    const [isCreateModalOpenCreate, setIsCreateModalOpen] = useState(false)
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-    const {data,isLoading,isFetching,refetch} = usePaginateQuery({
+
+    const {data,isLoading} = usePaginateQuery({
         key: KEYS.product_list,
         url: URLS.product_list,
         params: {
             params: {
-                size,
+                size: 10,
                 search: searchKey
             }
         },
         page
     });
+
+    const { mutate:fileUpload } = usePostQuery({});
 
     const columns = [
         {
@@ -52,11 +50,28 @@ const ProductsContainer = () => {
             dataIndex: "imageUrl",
             key: "imageUrl",
             width: 50,
-            render: (props, data, index) => (
+            render: (props, data) => (
                 <Link href={get(data,'imageUrl')} target="_blank">{t("Image")}</Link>
             )
         },
     ]
+
+    const customRequest = async (options) => {
+        const { file, onSuccess, onError } = options;
+        const formData = new FormData();
+        formData.append('file', file);
+        fileUpload(
+            { url: URLS.product_add, attributes: formData, config: { headers: { 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel' } } },
+            {
+                onSuccess: () => {
+                    onSuccess(true);
+                },
+                onError: (err) => {
+                    onError(err);
+                },
+            }
+        );
+    };
 
     return(
       <Container>
@@ -67,21 +82,14 @@ const ProductsContainer = () => {
                       onChange={(e) => setSearchKey(e.target.value)}
                       allowClear
                   />
-                  {/*<Button*/}
-                  {/*    icon={<PlusOutlined />}*/}
-                  {/*    type={"primary"}*/}
-                  {/*    onClick={() => setIsCreateModalOpen(true)}*/}
-                  {/*>*/}
-                  {/*    {t("New product")}*/}
-                  {/*</Button>*/}
-                  <Modal
-                      title={t('Create new product')}
-                      open={isCreateModalOpenCreate}
-                      onCancel={() => setIsCreateModalOpen(false)}
-                      footer={null}
+                  <Upload
+                      accept={"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"}
+                      multiple={false}
+                      customRequest={customRequest}
+                      showUploadList={{showRemoveIcon:false}}
                   >
-                      <CreateEditProduct setIsModalOpen={setIsCreateModalOpen} refetch={refetch}/>
-                  </Modal>
+                      <Button icon={<UploadOutlined />}>{t("Upload excel file")}</Button>
+                  </Upload>
               </Space>
 
               <Table
@@ -92,19 +100,6 @@ const ProductsContainer = () => {
                   pagination={false}
                   loading={isLoading}
               />
-
-              <Modal
-                  title={t("Edit product")}
-                  open={isEditModalOpen}
-                  onCancel={() => setIsEditModalOpen(false)}
-                  footer={null}
-              >
-                  <CreateEditProduct
-                      itemData={itemData}
-                      setIsModalOpen={setIsEditModalOpen}
-                      refetch={refetch}
-                  />
-              </Modal>
 
               <Row justify={"end"} style={{marginTop: 10}}>
                   <Pagination

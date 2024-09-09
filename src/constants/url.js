@@ -6,7 +6,7 @@ export const URLS = {
     users_list: 'api/admin/users/get-all-users',
     admins_list: 'api/admin/users/get-all-admins',
     product_list: '/api/admin/products',
-    product_add: '/api/admin/products/add',
+    product_add: '/api/admin/products/add-by-file',
     product_delete: '/api/admin/products/delete',
     product_edit: '/api/admin/products/edit',
     pharmacies_list: '/api/admin/pharmacies',

@@ -8,14 +8,12 @@ import {Button, Input, Pagination, Popconfirm, Row, Space, Table, Upload} from "
 import {get} from "lodash";
 import {DeleteOutlined, UploadOutlined} from "@ant-design/icons";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
-import {useSettingsStore} from "../../../store/index.js";
 import usePostQuery from "../../../hooks/api/usePostQuery.js";
 
 const PharmaciesContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
     const [searchKey,setSearchKey] = useState();
-    const accessToken = useSettingsStore((state) => get(state, "accessToken"))
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.pharmacies_list,
         url: URLS.pharmacies_list,
@@ -86,7 +84,7 @@ const PharmaciesContainer = () => {
         const formData = new FormData();
         formData.append('file', file);
         fileUpload(
-            { url: URLS.pharmacies_add, attributes: formData, config: { headers: { 'Content-Type': '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel' } } },
+            { url: URLS.pharmacies_add, attributes: formData, config: { headers: { 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel' } } },
             {
                 onSuccess: () => {
                     onSuccess(true);
@@ -107,7 +105,7 @@ const PharmaciesContainer = () => {
                         allowClear
                     />
                     <Upload
-                        accept={".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"}
+                        accept={"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"}
                         multiple={false}
                         customRequest={customRequest}
                         showUploadList={{showRemoveIcon:false}}
