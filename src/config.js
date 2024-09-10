@@ -1,5 +1,5 @@
 const config = {
-  API_ROOT: 'http://38.242.148.205:8081',
+  API_ROOT: 'https://jurabek-lab.medias.uz',
   DEFAULT_APP_LANG: "UZ",
 }
 export default config;
