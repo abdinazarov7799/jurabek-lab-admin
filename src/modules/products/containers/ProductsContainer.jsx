@@ -94,7 +94,7 @@ const ProductsContainer = () => {
 
               <Table
                   columns={columns}
-                  dataSource={get(data,'data.data.content',[])}
+                  dataSource={get(data,'data.content',[])}
                   bordered
                   size={"middle"}
                   pagination={false}
@@ -105,7 +105,7 @@ const ProductsContainer = () => {
                   <Pagination
                       current={page+1}
                       onChange={(page) => setPage(page - 1)}
-                      total={get(data,'data.data.totalPages') * 10 }
+                      total={get(data,'data.totalPages') * 10 }
                       showSizeChanger={false}
                   />
               </Row>
