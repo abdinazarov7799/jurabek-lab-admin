@@ -9,7 +9,7 @@ import {get, isEqual} from "lodash";
 const EditConstants = ({setIsModalOpen,refetch,data,id}) => {
     const {t} = useTranslation();
     const {mutate,isLoading} = usePutQuery({
-        listKeyId: KEYS.constants_get_all
+        listKeyId: KEYS.constants_list
     })
     const onFinish = (values) => {
         const formData = {

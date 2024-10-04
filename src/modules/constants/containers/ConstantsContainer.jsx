@@ -14,8 +14,8 @@ const ConstantsContainer = () => {
     const [isModalOpen,setIsModalOpen] = useState(false);
     let constants = []
     const {data,isLoading,refetch} = useGetAllQuery({
-        key: KEYS.constants_get_all,
-        url: URLS.constants_get_all,
+        key: KEYS.constants_list,
+        url: URLS.constants_list,
     })
     const columns = [
         {
