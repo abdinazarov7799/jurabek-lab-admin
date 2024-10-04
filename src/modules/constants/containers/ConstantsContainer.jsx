@@ -29,7 +29,7 @@ const ConstantsContainer = () => {
             key: "value",
         }
     ]
-    for (const [key, value] of Object.entries(get(data,'data.data',{}))) {
+    for (const [key, value] of Object.entries(get(data,'data',{}))) {
         !isEqual(key, 'id') && constants.push({key, value})
     }
     return (
