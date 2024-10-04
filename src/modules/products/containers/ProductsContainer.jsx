@@ -9,6 +9,7 @@ import Container from "../../../components/Container.jsx";
 import {UploadOutlined} from "@ant-design/icons";
 import usePostQuery from "../../../hooks/api/usePostQuery.js";
 const { Link } = Typography;
+
 const ProductsContainer = () => {
     const { t } = useTranslation();
     const [page, setPage] = useState(0);

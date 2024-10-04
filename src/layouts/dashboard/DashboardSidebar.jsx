@@ -12,6 +12,10 @@ const DashboardSidebar = () => {
 
     const items = [
         {
+            label: t("Transactions"),
+            key: "/transactions",
+        },
+        {
             label: t("Orders"),
             key: "/orders",
         },
@@ -30,6 +34,14 @@ const DashboardSidebar = () => {
         {
             label: t("Admins"),
             key: "/admins",
+        },
+        {
+            label: t("Constants"),
+            key: "/constants",
+        },
+        {
+            label: t("Translations"),
+            key: "/translations",
         },
     ];
 

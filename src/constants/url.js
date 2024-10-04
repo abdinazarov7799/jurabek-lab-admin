@@ -17,4 +17,10 @@ export const URLS = {
     order_accept: '/api/admin/orders/accept',
     order_products: '/api/admin/orders/get-order-products',
     role_list: '/api/admin/roles',
+    constants_list: '/api/admin/constants/get',
+    constants_edit: '/api/admin/constants/edit',
+    translations_list: '/api/admin/language/get-all',
+    translations_edit: '/api/admin/language/create-edit',
+    transaction_accept: '/api/admin/transactions/paid-or-reject',
+    transaction_list: '/api/admin/transactions/all',
 };

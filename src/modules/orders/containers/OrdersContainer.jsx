@@ -6,7 +6,7 @@ import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {useTranslation} from "react-i18next";
-import {CheckOutlined, EditOutlined} from "@ant-design/icons";
+import {CheckOutlined, CloseOutlined, EditOutlined} from "@ant-design/icons";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
 
 const OrdersContainer = () => {
@@ -29,10 +29,9 @@ const OrdersContainer = () => {
 
     const {mutate:accept} = usePatchQuery({})
     const useEdit = (id) => {
-
     }
-    const useAccept = (id) => {
-        accept({url: `${URLS.order_accept}/${id}`, attributes: {accept: true}})
+    const useAccept = (id,isAccept) => {
+        accept({url: `${URLS.order_accept}/${id}?accept=${isAccept}`})
     }
 
     const columns = [
@@ -78,20 +77,31 @@ const OrdersContainer = () => {
             )
         },
         {
-            title: t("Accept"),
+            title: t("Reject / Accept"),
             width: 120,
             fixed: 'right',
             key: 'action',
             render: (props, data) => (
-                <Popconfirm
-                    title={t("Accept")}
-                    description={t("Are you sure to accept?")}
-                    onConfirm={() => useAccept(get(data,'id'))}
-                    okText={t("Yes")}
-                    cancelText={t("No")}
-                >
-                    <Button icon={<CheckOutlined />}/>
-                </Popconfirm>
+                <Space>
+                    <Popconfirm
+                        title={t("Reject")}
+                        description={t("Are you sure to reject?")}
+                        onConfirm={() => useAccept(get(data,'id'),false)}
+                        okText={t("Yes")}
+                        cancelText={t("No")}
+                    >
+                        <Button danger icon={<CloseOutlined />}/>
+                    </Popconfirm>
+                    <Popconfirm
+                        title={t("Accept")}
+                        description={t("Are you sure to accept?")}
+                        onConfirm={() => useAccept(get(data,'id'),true)}
+                        okText={t("Yes")}
+                        cancelText={t("No")}
+                    >
+                        <Button icon={<CheckOutlined />}/>
+                    </Popconfirm>
+                </Space>
             )
         }
     ]

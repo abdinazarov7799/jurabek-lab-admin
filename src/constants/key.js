@@ -6,4 +6,6 @@ export const KEYS = {
     pharmacies_list: "pharmacies_list",
     order_products: "order_products",
     role_list: "role_list",
+    translations_list: "translations_list",
+    constants_list: "constants_list"
 };

@@ -23,6 +23,8 @@ import UsersPage from "../modules/users/pages/UsersPage.jsx";
 import AdminsPage from "../modules/admins/pages/AdminsPage.jsx";
 import OrdersPage from "../modules/orders/pages/OrdersPage.jsx";
 import PharmaciesPage from "../modules/pharmacies/pages/PharmaciesPage.jsx";
+import TranslationPage from "../modules/translations/pages/TranslationPage.jsx";
+import ConstantsPage from "../modules/constants/pages/ConstantsPage.jsx";
 // PAGES
 
 
@@ -52,6 +54,14 @@ const Router = () => {
               <Route
                   path={"/pharmacies"}
                   element={<PharmaciesPage />}
+              />
+              <Route
+                  path={"/translations"}
+                  element={<TranslationPage />}
+              />
+              <Route
+                  path={"/constants"}
+                  element={<ConstantsPage />}
               />
               <Route
                   path={"auth/*"}
