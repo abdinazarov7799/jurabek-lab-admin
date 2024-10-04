@@ -1,14 +1,14 @@
 import React from 'react';
-import usePutQuery from "../../../hooks/api/usePutQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {Button, Form, Input} from "antd";
 import {useTranslation} from "react-i18next";
 import {get, isEqual} from "lodash";
+import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
 
 const EditConstants = ({setIsModalOpen,refetch,data,id}) => {
     const {t} = useTranslation();
-    const {mutate,isLoading} = usePutQuery({
+    const {mutate,isLoading} = usePatchQuery({
         listKeyId: KEYS.constants_list
     })
     const onFinish = (values) => {
