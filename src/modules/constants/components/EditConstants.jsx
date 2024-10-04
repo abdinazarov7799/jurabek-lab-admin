@@ -6,18 +6,14 @@ import {useTranslation} from "react-i18next";
 import {get, isEqual} from "lodash";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
 
-const EditConstants = ({setIsModalOpen,refetch,data,id}) => {
+const EditConstants = ({setIsModalOpen,refetch,data}) => {
     const {t} = useTranslation();
     const {mutate,isLoading} = usePatchQuery({
         listKeyId: KEYS.constants_list
     })
     const onFinish = (values) => {
-        const formData = {
-            ...values,
-            id
-        }
         mutate(
-            { url: `${URLS.constants_edit}/${id}`, attributes: formData },
+            { url: URLS.constants_edit, attributes: values },
             {
                 onSuccess: () => {
                     setIsModalOpen(false);

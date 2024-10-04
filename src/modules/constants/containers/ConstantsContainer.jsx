@@ -59,7 +59,7 @@ const ConstantsContainer = () => {
                 onCancel={() => setIsModalOpen(false)}
                 footer={null}
             >
-                <EditConstants setIsModalOpen={setIsModalOpen} refetch={refetch} data={constants} id={get(data,'data.id')}/>
+                <EditConstants setIsModalOpen={setIsModalOpen} refetch={refetch} data={constants} />
             </Modal>
         </Container>
     );
