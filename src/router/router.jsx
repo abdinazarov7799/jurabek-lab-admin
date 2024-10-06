@@ -25,6 +25,7 @@ import OrdersPage from "../modules/orders/pages/OrdersPage.jsx";
 import PharmaciesPage from "../modules/pharmacies/pages/PharmaciesPage.jsx";
 import TranslationPage from "../modules/translations/pages/TranslationPage.jsx";
 import ConstantsPage from "../modules/constants/pages/ConstantsPage.jsx";
+import TransactionPage from "../modules/transactions/pages/TransactionPage.jsx";
 // PAGES
 
 
@@ -58,6 +59,10 @@ const Router = () => {
               <Route
                   path={"/translations"}
                   element={<TranslationPage />}
+              />
+              <Route
+                  path={"/transactions"}
+                  element={<TransactionPage />}
               />
               <Route
                   path={"/constants"}

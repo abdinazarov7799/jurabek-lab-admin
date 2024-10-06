@@ -11,7 +11,7 @@ const i18config = i18n
     .init({
         lng: storage.get("lang") || config.DEFAULT_APP_LANG,
         fallbackLng: storage.get("lang") || config.DEFAULT_APP_LANG,
-        saveMissing: false,
+        saveMissing: true,
         detection: {
             order: ["localStorage"],
             lookupLocalStorage: "lang",
@@ -21,8 +21,8 @@ const i18config = i18n
             wait: true,
         },
         backend: {
-            loadPath: `${config.API_ROOT}/api/admin/by-lang?language={{lng}}`,
-            addPath: `${config.API_ROOT}/api/admin/lang/create-key`,
+            loadPath: `${config.API_ROOT}/api/admin/language/by-lang?language={{lng}}`,
+            addPath: `${config.API_ROOT}/api/admin/language/create-key`,
         },
     });
 
