@@ -11,7 +11,7 @@ const i18config = i18n
     .init({
         lng: storage.get("lang") || config.DEFAULT_APP_LANG,
         fallbackLng: storage.get("lang") || config.DEFAULT_APP_LANG,
-        saveMissing: true,
+        saveMissing: false,
         detection: {
             order: ["localStorage"],
             lookupLocalStorage: "lang",

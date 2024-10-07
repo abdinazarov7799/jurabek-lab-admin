@@ -25,9 +25,29 @@ const TransactionContainer = () => {
 
     const columns = [
         {
-            title: t("ID"),
-            dataIndex: "id",
-            key: "id",
+            title: t("Number"),
+            dataIndex: "number",
+            key: "number",
+        },
+        {
+            title: t("Phone"),
+            dataIndex: "phoneNumber",
+            key: "phoneNumber",
+        },
+        {
+            title: t("Card"),
+            dataIndex: "card",
+            key: "card",
+        },
+        {
+            title: t("Amount"),
+            dataIndex: "amount",
+            key: "amount",
+        },
+        {
+            title: t("Status"),
+            dataIndex: "status",
+            key: "status",
         },
     ]
     return (
