@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {notification} from "antd";
 import {get} from "lodash";
 
-const putRequest = (url, attributes) => request.patch(url, attributes);
+const patchRequest = (url, attributes) => request.patch(url, attributes);
 
 const usePatchQuery = ({hideSuccessToast = false, listKeyId = null}) => {
     const {t} = useTranslation();
@@ -14,7 +14,7 @@ const usePatchQuery = ({hideSuccessToast = false, listKeyId = null}) => {
         const {mutate, isLoading, isError, error, isFetching} = useMutation(
             ({
                  url, attributes
-             }) => putRequest(url, attributes),
+             }) => patchRequest(url, attributes),
             {
                 onSuccess: (data) => {
                     if (!hideSuccessToast) {

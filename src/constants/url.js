@@ -8,7 +8,7 @@ export const URLS = {
     product_list: '/api/admin/products',
     product_add: '/api/admin/products/add-by-file',
     product_delete: '/api/admin/products/delete',
-    product_edit: '/api/admin/products/edit',
+    product_edit: '/api/admin/products/edit-image',
     pharmacies_list: '/api/admin/pharmacies',
     pharmacies_add: '/api/admin/pharmacies/add-by-file',
     pharmacies_delete: '/api/admin/pharmacies/delete',
@@ -23,4 +23,5 @@ export const URLS = {
     translations_edit: '/api/admin/language/create-edit',
     transaction_accept: '/api/admin/transactions/paid-or-reject',
     transaction_list: '/api/admin/transactions/all',
+    upload_file: '/api/files/upload',
 };
