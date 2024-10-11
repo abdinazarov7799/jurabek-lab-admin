@@ -4,8 +4,10 @@ import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import Container from "../../../components/Container.jsx";
-import {Input, Pagination, Row, Space, Table} from "antd";
+import {Button, Input, Pagination, Popconfirm, Row, Space, Table} from "antd";
 import {get} from "lodash";
+import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
+import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
 
 const TransactionContainer = () => {
     const {t} = useTranslation();
@@ -22,6 +24,12 @@ const TransactionContainer = () => {
         },
         page
     });
+
+    const {mutate:accept} = usePatchQuery({listKeyId: KEYS.transactions_list})
+
+    const useAccept = (id,isAccept) => {
+        accept({url: `${URLS.transaction_accept}/${id}?paidOrRejected=${isAccept}`})
+    }
 
     const columns = [
         {
@@ -49,6 +57,34 @@ const TransactionContainer = () => {
             dataIndex: "status",
             key: "status",
         },
+        {
+            title: t("Reject / Accept"),
+            width: 120,
+            fixed: 'right',
+            key: 'action',
+            render: (props, data) => (
+                <Space>
+                    <Popconfirm
+                        title={t("Reject")}
+                        description={t("Are you sure to reject?")}
+                        onConfirm={() => useAccept(get(data,'number'),false)}
+                        okText={t("Yes")}
+                        cancelText={t("No")}
+                    >
+                        <Button danger icon={<CloseOutlined />}/>
+                    </Popconfirm>
+                    <Popconfirm
+                        title={t("Accept")}
+                        description={t("Are you sure to accept?")}
+                        onConfirm={() => useAccept(get(data,'number'),true)}
+                        okText={t("Yes")}
+                        cancelText={t("No")}
+                    >
+                        <Button icon={<CheckOutlined />}/>
+                    </Popconfirm>
+                </Space>
+            )
+        }
     ]
     return (
         <Container>

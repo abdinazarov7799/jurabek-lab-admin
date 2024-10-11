@@ -67,7 +67,7 @@ const OrdersContainer = () => {
         },
         {
             title: t("Edit"),
-            width: 120,
+            width: 60,
             fixed: 'right',
             key: 'action',
             render: (props, data) => (
