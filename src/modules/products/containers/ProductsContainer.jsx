@@ -10,6 +10,7 @@ import {EditOutlined, InboxOutlined, UploadOutlined} from "@ant-design/icons";
 import usePostQuery from "../../../hooks/api/usePostQuery.js";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
 import ImgCrop from "antd-img-crop";
+import Resizer from "react-image-file-resizer";
 const { Dragger } = Upload;
 
 const ProductsContainer = () => {
@@ -32,10 +33,8 @@ const ProductsContainer = () => {
     });
 
     const { mutate:fileUpload } = usePostQuery({});
-    const { mutate:UploadImage } = usePostQuery({
-        hideSuccessToast: true
-    });
-    const {mutate} = usePatchQuery({})
+    const { mutate:UploadImage } = usePostQuery({});
+    const {mutate} = usePatchQuery({listKeyId: KEYS.product_list})
 
     const resizeFile = (file) =>
         new Promise((resolve) => {
@@ -84,15 +83,21 @@ const ProductsContainer = () => {
         if (!!imageUrl) {
             mutate({
                 url: `${URLS.product_edit}/${get(selected, 'id')}`,
-                attributes: imageUrl,
+                attributes: {imageUrl},
             },{
                 onSuccess: () => {
+                    setImgUrl(null)
                     setSelected(null);
                 }
             })
         }else {
             setSelected(null);
         }
+    }
+
+    const onCancel = () => {
+        setSelected(null)
+        setImgUrl(null)
     }
 
     const columns = [
@@ -146,14 +151,14 @@ const ProductsContainer = () => {
                   <Modal
                       title={get(selected,'name')}
                       open={!!selected}
-                      onCancel={() => setSelected(null)}
+                      onCancel={onCancel}
                       onOk={handleOk}
                   >
                       <Space direction="vertical" style={{width:'100%'}} size={"middle"}>
                           <Flex justify={"center"}>
                               <Image src={imageUrl ?? get(selected,'imageUrl')} width={400} height={400} />
                           </Flex>
-                          <ImgCrop quality={0.5} aspect={1}>
+                          <ImgCrop quality={0.5} aspect={1} showGrid rotationSlider>
                               <Dragger
                                   maxCount={1}
                                   multiple={false}
