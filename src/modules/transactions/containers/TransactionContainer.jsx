@@ -4,10 +4,11 @@ import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import Container from "../../../components/Container.jsx";
-import {Button, Input, Pagination, Popconfirm, Row, Space, Table} from "antd";
+import {Button, Input, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
+const {Text} = Typography
 
 const TransactionContainer = () => {
     const {t} = useTranslation();
@@ -31,6 +32,14 @@ const TransactionContainer = () => {
         accept({url: `${URLS.transaction_accept}/${id}?paidOrRejected=${isAccept}`})
     }
 
+    const getStatusColor = (status) => {
+        switch (status) {
+            case "DONE" : return "success"
+            case "REJECTED" : return "danger"
+            case "WAITING" : return "warning"
+        }
+    }
+
     const columns = [
         {
             title: t("Number"),
@@ -51,11 +60,13 @@ const TransactionContainer = () => {
             title: t("Amount"),
             dataIndex: "amount",
             key: "amount",
+            render: (price) => Number(price).toLocaleString("en-US")
         },
         {
             title: t("Status"),
             dataIndex: "status",
             key: "status",
+            render: (text) => <Text type={getStatusColor(text)}>{text}</Text>
         },
         {
             title: t("Reject / Accept"),
@@ -67,7 +78,7 @@ const TransactionContainer = () => {
                     <Popconfirm
                         title={t("Reject")}
                         description={t("Are you sure to reject?")}
-                        onConfirm={() => useAccept(get(data,'number'),false)}
+                        onConfirm={() => useAccept(get(data,'id'),false)}
                         okText={t("Yes")}
                         cancelText={t("No")}
                     >
@@ -76,11 +87,11 @@ const TransactionContainer = () => {
                     <Popconfirm
                         title={t("Accept")}
                         description={t("Are you sure to accept?")}
-                        onConfirm={() => useAccept(get(data,'number'),true)}
+                        onConfirm={() => useAccept(get(data,'id'),true)}
                         okText={t("Yes")}
                         cancelText={t("No")}
                     >
-                        <Button icon={<CheckOutlined />}/>
+                        <Button type={"primary"} icon={<CheckOutlined />}/>
                     </Popconfirm>
                 </Space>
             )

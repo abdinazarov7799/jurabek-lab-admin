@@ -116,6 +116,7 @@ const ProductsContainer = () => {
             title: t("Price"),
             dataIndex: "price",
             key: "price",
+            render: (price) => Number(price).toLocaleString("en-US")
         },
         {
             title: t("Image"),

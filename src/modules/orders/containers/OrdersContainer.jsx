@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Input, Pagination, Popconfirm, Row, Space, Table} from "antd";
+import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import Container from "../../../components/Container.jsx";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
@@ -8,6 +8,9 @@ import {URLS} from "../../../constants/url.js";
 import {useTranslation} from "react-i18next";
 import {CheckOutlined, CloseOutlined, EditOutlined} from "@ant-design/icons";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
+import OrderEdit from "../components/OrderEdit.jsx";
+import dayjs from "dayjs";
+const {Text} = Typography;
 
 const OrdersContainer = () => {
     const [status, setStatus] = useState(null);
@@ -34,6 +37,15 @@ const OrdersContainer = () => {
         accept({url: `${URLS.order_accept}/${id}?accept=${isAccept}`})
     }
 
+    const getStatusColor = (status) => {
+        switch (status) {
+            case "CONFIRMED" : return "success"
+            case "REJECTED" : return "danger"
+            case "SENT" : return "warning"
+        }
+    }
+
+
     const columns = [
         {
             title: t("ID"),
@@ -53,17 +65,21 @@ const OrdersContainer = () => {
         {
             title: t("Status"),
             dataIndex: "status",
-            key: "status"
+            key: "status",
+            render: (text) => <Text type={getStatusColor(text)}>{text}</Text>
         },
         {
             title: t("Total price"),
             dataIndex: "totalPrice",
-            key: "totalPrice"
+            key: "totalPrice",
+            render: (price) => Number(price).toLocaleString("en-US")
         },
         {
             title: t("Created time"),
             dataIndex: "createdTime",
-            key: "createdTime"
+            key: "createdTime",
+            width: 200,
+            render: (time) => dayjs(time).format("YYYY-MM-DD HH:mm:ss"),
         },
         {
             title: t("Edit"),
@@ -99,7 +115,7 @@ const OrdersContainer = () => {
                         okText={t("Yes")}
                         cancelText={t("No")}
                     >
-                        <Button icon={<CheckOutlined />}/>
+                        <Button type={"primary"} icon={<CheckOutlined />}/>
                     </Popconfirm>
                 </Space>
             )
@@ -107,6 +123,15 @@ const OrdersContainer = () => {
     ]
     return (
         <Container>
+            <Modal
+                title={get(selected,'phoneNumber')}
+                open={!!selected}
+                onCancel={() => {setSelected(null)}}
+                footer={null}
+                width={800}
+            >
+                <OrderEdit selected={selected} setSelected={setSelected} getStatusColor={getStatusColor}/>
+            </Modal>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
                 <Space>
                     <Input.Search
