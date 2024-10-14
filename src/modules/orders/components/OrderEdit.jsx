@@ -3,9 +3,10 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {get} from "lodash";
 import useGetOneQuery from "../../../hooks/api/useGetOneQuery.js";
-import {Divider, Row, Space, Statistic, Typography} from "antd";
+import {Divider, Row, Space, Typography} from "antd";
 import {useTranslation} from "react-i18next";
 import dayjs from "dayjs";
+import EditedProduct from "./EditedProduct.jsx";
 const {Text,Title} = Typography;
 
 const OrderEdit = ({selected,getStatusColor}) => {
@@ -20,7 +21,7 @@ const OrderEdit = ({selected,getStatusColor}) => {
             size: 1000
         }
     })
-    console.log(selected)
+
     return (
         <div>
             <Divider style={{marginTop: 0}}/>
@@ -49,6 +50,11 @@ const OrderEdit = ({selected,getStatusColor}) => {
                     <Title level={5}>{t("Status")}</Title>
                     <Text type={getStatusColor(get(selected,'status'))}>{get(selected,'status')}</Text>
                 </Row>
+                {
+                    get(data,'data.content',[])?.map(product => {
+                        return <EditedProduct product={product} key={get(product,'id')}/>
+                    })
+                }
             </Space>
         </div>
     );
