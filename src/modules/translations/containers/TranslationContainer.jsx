@@ -13,7 +13,6 @@ import Container from "../../../components/Container.jsx";
 const TranslationContainer = () => {
     const { t } = useTranslation();
     const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(20);
     const [searchWord, setSearchWord] = useState(null);
     const [selected,setSelected] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,7 +22,7 @@ const TranslationContainer = () => {
         params: {
             params: {
                 search: searchWord,
-                size: pageSize,
+                size: 20,
             },
         },
         page,
@@ -56,18 +55,26 @@ const TranslationContainer = () => {
         },
         {
             title: t("Uz"),
-            key: "Uz",
+            key: "uz",
             width: 400,
-            render: (props, data, index) => {
-                return <>{get(findLang(get(data, "languageSourcePs", []), "UZ"), "translation")}</>
+            render: (props, data) => {
+                return <>{get(findLang(get(data, "languageSourcePs", []), "uz"), "translation")}</>
             }
         },
         {
             title: t("Ru"),
-            key: "Ru",
+            key: "ru",
             width: 400,
-            render: (props, data, index) => {
-                return <>{get(findLang(get(data, "languageSourcePs", []), "RU"), "translation")}</>
+            render: (props, data) => {
+                return <>{get(findLang(get(data, "languageSourcePs", []), "ru"), "translation")}</>
+            }
+        },
+        {
+            title: t("Kr"),
+            key: "kr",
+            width: 400,
+            render: (props, data) => {
+                return <>{get(findLang(get(data, "languageSourcePs", []), "kr"), "translation")}</>
             }
         },
         {
@@ -75,7 +82,7 @@ const TranslationContainer = () => {
             width: 120,
             fixed: 'right',
             key: 'action',
-            render: (props, data, index) => (
+            render: (props, data) => (
                 <Button icon={<EditOutlined />} onClick={() => {
                     showModal();
                     setSelected(data)

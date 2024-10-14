@@ -146,73 +146,73 @@ const ProductsContainer = () => {
     };
 
     return(
-      <Container>
-          {
-              selected && (
-                  <Modal
-                      title={get(selected,'name')}
-                      open={!!selected}
-                      onCancel={onCancel}
-                      onOk={handleOk}
-                  >
-                      <Space direction="vertical" style={{width:'100%'}} size={"middle"}>
-                          <Flex justify={"center"}>
-                              <Image src={imageUrl ?? get(selected,'imageUrl')} width={400} height={400} />
-                          </Flex>
-                          <ImgCrop quality={0.5} aspect={1} showGrid rotationSlider>
-                              <Dragger
-                                  maxCount={1}
-                                  multiple={false}
-                                  accept={".jpg,.png,jpeg,svg"}
-                                  customRequest={customRequestImage}
-                                  beforeUpload={beforeUpload}
-                              >
-                                  <p className="ant-upload-drag-icon">
-                                      <InboxOutlined />
-                                  </p>
-                                  <p className="ant-upload-text">{t("Click or drag file to this area to upload")}</p>
-                              </Dragger>
-                          </ImgCrop>
-                      </Space>
-                  </Modal>
-              )
-          }
-          <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
-              <Space size={"middle"}>
-                  <Input.Search
-                      placeholder={t("Search")}
-                      onChange={(e) => setSearchKey(e.target.value)}
-                      allowClear
-                  />
-                  <Upload
-                      accept={"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"}
-                      multiple={false}
-                      customRequest={customRequest}
-                      showUploadList={{showRemoveIcon:false}}
-                  >
-                      <Button icon={<UploadOutlined />}>{t("Upload excel file")}</Button>
-                  </Upload>
-              </Space>
+        <Container>
+            {
+                selected && (
+                    <Modal
+                        title={get(selected,'name')}
+                        open={!!selected}
+                        onCancel={onCancel}
+                        onOk={handleOk}
+                    >
+                        <Space direction="vertical" style={{width:'100%'}} size={"middle"}>
+                            <Flex justify={"center"}>
+                                <Image src={imageUrl ?? get(selected,'imageUrl')} width={400} height={400} />
+                            </Flex>
+                            <ImgCrop quality={0.5} aspect={1} showGrid rotationSlider>
+                                <Dragger
+                                    maxCount={1}
+                                    multiple={false}
+                                    accept={".jpg,.png,jpeg,svg"}
+                                    customRequest={customRequestImage}
+                                    beforeUpload={beforeUpload}
+                                >
+                                    <p className="ant-upload-drag-icon">
+                                        <InboxOutlined />
+                                    </p>
+                                    <p className="ant-upload-text">{t("Click or drag file to this area to upload")}</p>
+                                </Dragger>
+                            </ImgCrop>
+                        </Space>
+                    </Modal>
+                )
+            }
+            <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
+                <Space size={"middle"}>
+                    <Input.Search
+                        placeholder={t("Search")}
+                        onChange={(e) => setSearchKey(e.target.value)}
+                        allowClear
+                    />
+                    <Upload
+                        accept={"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"}
+                        multiple={false}
+                        customRequest={customRequest}
+                        showUploadList={{showRemoveIcon:false}}
+                    >
+                        <Button icon={<UploadOutlined />}>{t("Upload excel file")}</Button>
+                    </Upload>
+                </Space>
 
-              <Table
-                  columns={columns}
-                  dataSource={get(data,'data.content',[])}
-                  bordered
-                  size={"middle"}
-                  pagination={false}
-                  loading={isLoading}
-              />
+                <Table
+                    columns={columns}
+                    dataSource={get(data,'data.content',[])}
+                    bordered
+                    size={"middle"}
+                    pagination={false}
+                    loading={isLoading}
+                />
 
-              <Row justify={"end"} style={{marginTop: 10}}>
-                  <Pagination
-                      current={page+1}
-                      onChange={(page) => setPage(page - 1)}
-                      total={get(data,'data.totalPages') * 10 }
-                      showSizeChanger={false}
-                  />
-              </Row>
-          </Space>
-      </Container>
-  )
+                <Row justify={"end"} style={{marginTop: 10}}>
+                    <Pagination
+                        current={page+1}
+                        onChange={(page) => setPage(page - 1)}
+                        total={get(data,'data.totalPages') * 10 }
+                        showSizeChanger={false}
+                    />
+                </Row>
+            </Space>
+        </Container>
+    )
 }
 export default ProductsContainer

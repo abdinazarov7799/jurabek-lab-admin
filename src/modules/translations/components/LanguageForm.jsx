@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Button, Form, Input, message, notification} from "antd";
+import {Button, Form, message} from "antd";
 import {find, get, isEqual} from "lodash";
 import {useTranslation} from "react-i18next";
 import TextArea from "antd/es/input/TextArea";
@@ -18,13 +18,18 @@ const LanguageForm = ({data,handleCancel,refetch}) => {
     useEffect(() => {
         form.setFieldsValue({
             key: get(data, "key"),
-            UZ: get(
-                findLang(get(data, "languageSourcePs", []), "UZ"),
+            uz: get(
+                findLang(get(data, "languageSourcePs", []), "uz"),
                 "translation",
                 ""
             ),
-            RU: get(
-                findLang(get(data, "languageSourcePs", []), "RU"),
+            ru: get(
+                findLang(get(data, "languageSourcePs", []), "ru"),
+                "translation",
+                ""
+            ),
+            kr: get(
+                findLang(get(data, "languageSourcePs", []), "kr"),
                 "translation",
                 ""
             )
@@ -36,8 +41,9 @@ const LanguageForm = ({data,handleCancel,refetch}) => {
             { url: `${URLS.translations_edit}`, attributes: {
                     id: get(data,'id'),
                     key: get(data,'key'),
-                    textUz: get(values,'UZ'),
-                    textRu: get(values,'RU'),
+                    textUz: get(values,'uz'),
+                    textRu: get(values,'ru'),
+                    textKr: get(values,'kr'),
                 }},
             {
                 onSuccess: () => {
@@ -72,14 +78,21 @@ const LanguageForm = ({data,handleCancel,refetch}) => {
 
                 <Form.Item
                     label={t("Uzbek")}
-                    name="UZ"
+                    name="uz"
                 >
                     <TextArea allowClear/>
                 </Form.Item>
 
                 <Form.Item
                     label={t("Rus")}
-                    name="RU"
+                    name="ru"
+                >
+                    <TextArea allowClear/>
+                </Form.Item>
+
+                <Form.Item
+                    label={t("Krill")}
+                    name="kr"
                 >
                     <TextArea allowClear/>
                 </Form.Item>
