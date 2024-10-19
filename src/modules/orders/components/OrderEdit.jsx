@@ -24,7 +24,8 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
         params: {
             page: 0,
             size: 1000
-        }
+        },
+        enabled: !!id
     })
     const {data:products,isLoading:isLoadingProducts,refetch:refetchProducts} = useGetAllQuery({
         key: KEYS.product_list,
@@ -40,6 +41,7 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
     const {mutate,isLoading:isLoadingEdit} = usePatchQuery({
         listKeyId: KEYS.order_list
     })
+
     useEffect(() => {
         refetchProducts()
     },[search])
@@ -49,7 +51,7 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
             ...selected,
             products: get(data,'data.content',[])
         })
-    },[selected,products])
+    },[selected,data])
 
     const onEditOrder = () => {
         mutate({
@@ -77,7 +79,6 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
         setSelectedProducts(data);
     }
     const onSaveOrder = () => {
-        // Avoid duplicates
         const updatedOrderProducts = [...get(order, 'products')];
 
         selectedProducts.forEach(selectedProduct => {
