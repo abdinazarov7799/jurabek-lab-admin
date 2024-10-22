@@ -4,13 +4,14 @@ import {useTranslation} from "react-i18next";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
-import {Button, Flex, Image, Input, message, Modal, Pagination, Row, Space, Table, Upload} from "antd";
+import {Button, Flex, Image, Input, message, Modal, Pagination, Popconfirm, Row, Space, Table, Upload} from "antd";
 import Container from "../../../components/Container.jsx";
-import {EditOutlined, InboxOutlined, UploadOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, InboxOutlined, UploadOutlined} from "@ant-design/icons";
 import usePostQuery from "../../../hooks/api/usePostQuery.js";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
 import ImgCrop from "antd-img-crop";
 import Resizer from "react-image-file-resizer";
+import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
 const { Dragger } = Upload;
 
 const ProductsContainer = () => {
@@ -100,6 +101,13 @@ const ProductsContainer = () => {
         setImgUrl(null)
     }
 
+    const { mutate:mutateDelete } = useDeleteQuery({
+        listKeyId: KEYS.product_list
+    });
+    const useDelete = (id) => {
+        mutateDelete({url: `${URLS.product_delete}/${id}`})
+    }
+
     const columns = [
         {
             title: t("ID"),
@@ -126,6 +134,23 @@ const ProductsContainer = () => {
                 <Button icon={<EditOutlined />} onClick={() => setSelected(data)} />
             )
         },
+        {
+            title: t("Delete"),
+            width: 120,
+            fixed: 'right',
+            key: 'action',
+            render: (props, data) => (
+                <Popconfirm
+                    title={t("Delete")}
+                    description={t("Are you sure to delete?")}
+                    onConfirm={() => useDelete(get(data,'id'))}
+                    okText={t("Yes")}
+                    cancelText={t("No")}
+                >
+                    <Button danger icon={<DeleteOutlined />}/>
+                </Popconfirm>
+            )
+        }
     ]
 
     const customRequest = async (options) => {
