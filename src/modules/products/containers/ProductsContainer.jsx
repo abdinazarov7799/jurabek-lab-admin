@@ -184,7 +184,7 @@ const ProductsContainer = () => {
                             <Flex justify={"center"}>
                                 <Image src={imageUrl ?? get(selected,'imageUrl')} width={400} height={400} />
                             </Flex>
-                            <ImgCrop quality={0.5} aspect={1} showGrid rotationSlider>
+                            <ImgCrop quality={0.5} aspect={1} showGrid rotationSlider minZoom={-1}>
                                 <Dragger
                                     maxCount={1}
                                     multiple={false}
