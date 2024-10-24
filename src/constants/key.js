@@ -8,5 +8,6 @@ export const KEYS = {
     role_list: "role_list",
     translations_list: "translations_list",
     transactions_list: "transactions_list",
-    constants_list: "constants_list"
+    constants_list: "constants_list",
+    getMe: "getMe"
 };

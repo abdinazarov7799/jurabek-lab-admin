@@ -24,4 +24,5 @@ export const URLS = {
     transaction_accept: '/api/admin/transactions/paid-or-reject',
     transaction_list: '/api/admin/transactions/all',
     upload_file: '/api/files/upload',
+    getMe: '/api/admin/users/get-me',
 };
