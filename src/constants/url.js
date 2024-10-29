@@ -8,7 +8,7 @@ export const URLS = {
     product_list: '/api/admin/products',
     product_add: '/api/admin/products/add-by-file',
     product_delete: '/api/admin/products/delete',
-    product_edit: '/api/admin/products/edit-image',
+    product_edit: '/api/admin/products/edit',
     pharmacies_list: '/api/admin/pharmacies',
     pharmacies_add: '/api/admin/pharmacies/add-by-file',
     pharmacies_delete: '/api/admin/pharmacies/delete',

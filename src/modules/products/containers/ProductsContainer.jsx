@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import {KEYS} from "../../../constants/key.js";
@@ -20,6 +20,7 @@ const ProductsContainer = () => {
     const [searchKey,setSearchKey] = useState();
     const [selected, setSelected] = useState(null);
     const [imageUrl,setImgUrl] = useState(null);
+    const [description,setDescription] = useState(null);
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.product_list,
@@ -81,10 +82,10 @@ const ProductsContainer = () => {
     };
 
     const handleOk = () => {
-        if (!!imageUrl) {
+        if (!!imageUrl || !!description) {
             mutate({
                 url: `${URLS.product_edit}/${get(selected, 'id')}`,
-                attributes: {imageUrl},
+                attributes: {imageUrl,description},
             },{
                 onSuccess: () => {
                     setImgUrl(null)
@@ -121,14 +122,19 @@ const ProductsContainer = () => {
             key: "name",
         },
         {
+            title: t("Description"),
+            dataIndex: "description",
+            key: "description",
+        },
+        {
             title: t("Price"),
             dataIndex: "price",
             key: "price",
             render: (price) => Number(price).toLocaleString("en-US")
         },
         {
-            title: t("Image"),
-            key: "imageUrl",
+            title: t("Edit"),
+            key: "edit",
             width: 50,
             render: (data) => (
                 <Button icon={<EditOutlined />} onClick={() => setSelected(data)} />
@@ -170,6 +176,11 @@ const ProductsContainer = () => {
         );
     };
 
+    useEffect(() => {
+        setDescription(get(selected,'description'));
+        setImgUrl(get(selected,'imageUrl'))
+    }, [selected]);
+
     return(
         <Container>
             {
@@ -182,7 +193,7 @@ const ProductsContainer = () => {
                     >
                         <Space direction="vertical" style={{width:'100%'}} size={"middle"}>
                             <Flex justify={"center"}>
-                                <Image src={imageUrl ?? get(selected,'imageUrl')} width={400} height={400} />
+                                <Image src={imageUrl} width={400} height={400} />
                             </Flex>
                             <ImgCrop quality={0.5} aspect={1} showGrid rotationSlider minZoom={-1}>
                                 <Dragger
@@ -198,6 +209,7 @@ const ProductsContainer = () => {
                                     <p className="ant-upload-text">{t("Click or drag file to this area to upload")}</p>
                                 </Dragger>
                             </ImgCrop>
+                            <Input.TextArea value={description} onChange={e => setDescription(e.target.value)} />
                         </Space>
                     </Modal>
                 )
