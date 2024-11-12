@@ -121,6 +121,10 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
                     <Text>{get(order,'pharmacy')}</Text>
                 </Row>
                 <Row justify={"space-between"} align={"middle"}>
+                    <Title level={5}>{t("INN")}</Title>
+                    <Text>{get(order,'inn')}</Text>
+                </Row>
+                <Row justify={"space-between"} align={"middle"}>
                     <Title level={5}>{t("Phone")}</Title>
                     <Text>{get(order,'phoneNumber')}</Text>
                 </Row>
