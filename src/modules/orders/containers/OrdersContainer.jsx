@@ -31,8 +31,7 @@ const OrdersContainer = () => {
     });
 
     const {mutate:accept} = usePatchQuery({})
-    const useEdit = (id) => {
-    }
+
     const useAccept = (id,isAccept) => {
         accept({url: `${URLS.order_accept}/${id}?accept=${isAccept}`})
     }
@@ -56,6 +55,11 @@ const OrdersContainer = () => {
             title: t("Pharmacy"),
             dataIndex: "pharmacy",
             key: "pharmacy"
+        },
+        {
+            title: t("INN"),
+            dataIndex: "inn",
+            key: "inn"
         },
         {
             title: t("Phone number"),
