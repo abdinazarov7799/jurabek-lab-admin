@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
-import {get} from "lodash";
+import {get, isEqual} from "lodash";
 import Container from "../../../components/Container.jsx";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
@@ -101,28 +101,34 @@ const OrdersContainer = () => {
             width: 120,
             fixed: 'right',
             key: 'action',
-            render: (props, data) => (
-                <Space>
-                    <Popconfirm
-                        title={t("Reject")}
-                        description={t("Are you sure to reject?")}
-                        onConfirm={() => useAccept(get(data,'id'),false)}
-                        okText={t("Yes")}
-                        cancelText={t("No")}
-                    >
-                        <Button danger icon={<CloseOutlined />}/>
-                    </Popconfirm>
-                    <Popconfirm
-                        title={t("Accept")}
-                        description={t("Are you sure to accept?")}
-                        onConfirm={() => useAccept(get(data,'id'),true)}
-                        okText={t("Yes")}
-                        cancelText={t("No")}
-                    >
-                        <Button type={"primary"} icon={<CheckOutlined />}/>
-                    </Popconfirm>
-                </Space>
-            )
+            render: (props, data) => {
+                if (!isEqual(get(data,'status'),'SENT')){
+                    return <></>
+                }else {
+                    return (
+                        <Space>
+                            <Popconfirm
+                                title={t("Reject")}
+                                description={t("Are you sure to reject?")}
+                                onConfirm={() => useAccept(get(data,'id'),false)}
+                                okText={t("Yes")}
+                                cancelText={t("No")}
+                            >
+                                <Button danger icon={<CloseOutlined />}/>
+                            </Popconfirm>
+                            <Popconfirm
+                                title={t("Accept")}
+                                description={t("Are you sure to accept?")}
+                                onConfirm={() => useAccept(get(data,'id'),true)}
+                                okText={t("Yes")}
+                                cancelText={t("No")}
+                            >
+                                <Button type={"primary"} icon={<CheckOutlined />}/>
+                            </Popconfirm>
+                        </Space>
+                    )
+                }
+            }
         }
     ]
     return (
