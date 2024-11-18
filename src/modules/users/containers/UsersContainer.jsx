@@ -63,7 +63,7 @@ const UsersContainer = () => {
             }
         },
         {
-            title: t("Registered"),
+            title: t("Blocked"),
             dataIndex: "blocked",
             key: "registered",
             render: (props,data) => {
