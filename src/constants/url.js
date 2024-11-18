@@ -4,6 +4,7 @@ export const URLS = {
     admin_edit: 'api/admin/users/edit-admin',
     admin_delete: 'api/admin/users/delete-admin',
     users_list: 'api/admin/users/get-all-users',
+    user_block: 'api/admin/users/block-user',
     admins_list: 'api/admin/users/get-all-admins',
     product_list: '/api/admin/products',
     product_add: '/api/admin/products/add-by-file',

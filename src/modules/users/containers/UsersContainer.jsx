@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Input, Pagination, Row, Space, Table} from "antd";
+import {Button, Input, Pagination, Popconfirm, Row, Space, Table} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
+import {LockOutlined, UnlockOutlined} from "@ant-design/icons";
+import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
 
 const UsersContainer = () => {
     const {t} = useTranslation();
@@ -22,6 +24,12 @@ const UsersContainer = () => {
         },
         page
     });
+
+    const {mutate:block} = usePatchQuery({listKeyId: KEYS.users_list})
+
+    const useBlock = (id,isBlock) => {
+        block({url: `${URLS.user_block}/${id}?block=${isBlock}`})
+    }
 
     const columns = [
         {
@@ -44,6 +52,36 @@ const UsersContainer = () => {
             dataIndex: "phoneNumber",
             key: "phoneNumber",
         },
+        {
+            title: t("Block / Un block"),
+            width: 120,
+            fixed: 'right',
+            key: 'action',
+            render: (props, data) => {
+                return (
+                    <Space>
+                        <Popconfirm
+                            title={t("Block")}
+                            description={t("Are you sure to block?")}
+                            onConfirm={() => useBlock(get(data,'id'),false)}
+                            okText={t("Yes")}
+                            cancelText={t("No")}
+                        >
+                            <Button danger icon={<LockOutlined />}/>
+                        </Popconfirm>
+                        <Popconfirm
+                            title={t("Un block")}
+                            description={t("Are you sure to unblock?")}
+                            onConfirm={() => useBlock(get(data,'id'),true)}
+                            okText={t("Yes")}
+                            cancelText={t("No")}
+                        >
+                            <Button type={"primary"} icon={<UnlockOutlined />}/>
+                        </Popconfirm>
+                    </Space>
+                )
+            }
+        }
     ]
     return (
         <Container>
