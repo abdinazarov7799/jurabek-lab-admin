@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, Input, Pagination, Popconfirm, Row, Space, Table} from "antd";
+import {Button, Input, Pagination, Popconfirm, Row, Space, Switch, Table} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {LockOutlined, UnlockOutlined} from "@ant-design/icons";
-import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
+import usePutQuery from "../../../hooks/api/usePutQuery.js";
 
 const UsersContainer = () => {
     const {t} = useTranslation();
@@ -25,7 +25,7 @@ const UsersContainer = () => {
         page
     });
 
-    const {mutate:block} = usePatchQuery({listKeyId: KEYS.users_list})
+    const {mutate:block} = usePutQuery({listKeyId: KEYS.users_list})
 
     const useBlock = (id,isBlock) => {
         block({url: `${URLS.user_block}/${id}?block=${isBlock}`})
@@ -53,6 +53,26 @@ const UsersContainer = () => {
             key: "phoneNumber",
         },
         {
+            title: t("Registered"),
+            dataIndex: "registered",
+            key: "registered",
+            render: (props,data) => {
+                return (
+                    <Switch disabled value={get(data,'registered')}/>
+                )
+            }
+        },
+        {
+            title: t("Registered"),
+            dataIndex: "blocked",
+            key: "registered",
+            render: (props,data) => {
+                return (
+                    <Switch disabled value={get(data,'blocked')}/>
+                )
+            }
+        },
+        {
             title: t("Block / Un block"),
             width: 120,
             fixed: 'right',
@@ -63,7 +83,7 @@ const UsersContainer = () => {
                         <Popconfirm
                             title={t("Block")}
                             description={t("Are you sure to block?")}
-                            onConfirm={() => useBlock(get(data,'id'),false)}
+                            onConfirm={() => useBlock(get(data,'id'),true)}
                             okText={t("Yes")}
                             cancelText={t("No")}
                         >
@@ -72,7 +92,7 @@ const UsersContainer = () => {
                         <Popconfirm
                             title={t("Un block")}
                             description={t("Are you sure to unblock?")}
-                            onConfirm={() => useBlock(get(data,'id'),true)}
+                            onConfirm={() => useBlock(get(data,'id'),false)}
                             okText={t("Yes")}
                             cancelText={t("No")}
                         >
