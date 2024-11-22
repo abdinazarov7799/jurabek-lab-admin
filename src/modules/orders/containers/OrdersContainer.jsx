@@ -52,6 +52,16 @@ const OrdersContainer = () => {
             key: "id",
         },
         {
+            title: t("Full name"),
+            dataIndex: "fullName",
+            key: "fullName"
+        },
+        {
+            title: t("User phone"),
+            dataIndex: "userPhone",
+            key: "userPhone"
+        },
+        {
             title: t("Pharmacy"),
             dataIndex: "pharmacy",
             key: "pharmacy"
@@ -82,12 +92,12 @@ const OrdersContainer = () => {
             title: t("Created time"),
             dataIndex: "createdTime",
             key: "createdTime",
-            width: 200,
+            width: 120,
             render: (time) => dayjs(time).format("YYYY-MM-DD HH:mm:ss"),
         },
         {
             title: t("Edit"),
-            width: 60,
+            width: 50,
             fixed: 'right',
             key: 'action',
             render: (props, data) => (
@@ -98,7 +108,7 @@ const OrdersContainer = () => {
         },
         {
             title: t("Reject / Accept"),
-            width: 120,
+            width: 90,
             fixed: 'right',
             key: 'action',
             render: (props, data) => {

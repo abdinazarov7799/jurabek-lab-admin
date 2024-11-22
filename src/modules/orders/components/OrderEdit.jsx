@@ -113,6 +113,18 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
             <Divider style={{marginTop: 0}}/>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
                 <Row justify={"space-between"} align={"middle"}>
+                    <Title level={5}>{t("Full name")}</Title>
+                    <Text>{get(order,'fullName')}</Text>
+                </Row>
+                <Row justify={"space-between"} align={"middle"}>
+                    <Title level={5}>{t("User phone")}</Title>
+                    <Text>{get(order,'userPhone')}</Text>
+                </Row>
+                <Row justify={"space-between"} align={"middle"}>
+                    <Title level={5}>{t("Address")}</Title>
+                    <Text>{get(order,'address')}</Text>
+                </Row>
+                <Row justify={"space-between"} align={"middle"}>
                     <Title level={5}>{t("Address")}</Title>
                     <Text>{get(order,'address')}</Text>
                 </Row>
