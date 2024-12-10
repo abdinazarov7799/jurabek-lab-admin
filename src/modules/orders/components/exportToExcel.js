@@ -7,7 +7,7 @@ const exportToExcel = (data, fileName) => {
         Index: index + 1,
         Name: get(product, "name"),
         ID: get(product, "id"),
-        Price: get(product, "price"),
+        Price: `${Intl.NumberFormat("en-US").format(get(product, "price",0))} so'm`,
         Quantity: get(product, "quantity"),
         ImageURL: get(product, "imageUrl"),
     }));
@@ -28,17 +28,17 @@ const exportToExcel = (data, fileName) => {
     const wsProducts = XLSX.utils.json_to_sheet(formattedProducts);
 
     wsGeneral["!cols"] = [
-        { wch: 50 },
-        { wch: 80 },
+        { wch: 25 },
+        { wch: 40 },
     ];
 
     wsProducts["!cols"] = [
         { wch: 10 },
+        { wch: 70 },
+        { wch: 10 },
+        { wch: 15 },
+        { wch: 15 },
         { wch: 100 },
-        { wch: 15 },
-        { wch: 15 },
-        { wch: 15 },
-        { wch: 200 },
     ];
 
     const wb = XLSX.utils.book_new();
