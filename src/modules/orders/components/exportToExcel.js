@@ -3,62 +3,53 @@ import { saveAs } from "file-saver";
 import { get } from "lodash";
 
 const exportToExcel = (data, fileName) => {
+    // General Info (Header) Format
     const generalInfo = [
-        ["Full Name", get(data, "fullName")],
-        ["Address", get(data, "address")],
-        ["INN", get(data, "inn")],
-        ["Pharmacy", get(data, "pharmacy")],
-        ["Phone Number", get(data, "phoneNumber")],
-        ["User Phone", get(data, "userPhone")],
-        ["Total Price", `${Intl.NumberFormat("en-US").format(get(data, "totalPrice", 0))} so'm`],
+        ["Накладная", "(Мобильное приложение)","Дата", new Date().toLocaleDateString()],
+        [],
+        ["Клиент", get(data, "fullName"), "", ""],
+        ["Телефон", get(data, "phoneNumber"), "", ""],
+        ["Адрес", get(data, "address"), "", ""],
+        ["ИНН", get(data, "inn"), "", ""],
+        [],
+        ["№", "Наименование товара", "Количество", "Цена"],
     ];
 
-    const productHeader = ["№", "Name", "Price", "Quantity"];
-    const formattedProducts = data.products.map((product, index) => [
+    // Products Section
+    const formattedProducts = data?.products?.map((product, index) => [
         index + 1,
         get(product, "name"),
-        `${Intl.NumberFormat("en-US").format(get(product, "price", 0))} so'm`,
         get(product, "quantity"),
+        Intl.NumberFormat("en-US").format(get(product, "price", 0)),
     ]);
 
-    const combinedData = [
-        ...generalInfo,
+    // Footer Section
+    const footerInfo = [
         [],
         [],
-        productHeader,
-        ...formattedProducts,
+        ["","","Номер Агента", get(data, "userPhone"),]
     ];
 
+    // Combine All Sections
+    const combinedData = [...generalInfo, ...formattedProducts, ...footerInfo];
+
+    // Create WorkSheet
     const ws = XLSX.utils.aoa_to_sheet(combinedData);
 
+    // Column Width Settings
     ws["!cols"] = [
-        { wch: 10 },
-        { wch: 50 },
-        { wch: 20 },
-        { wch: 15 },
+        { wch: 10 }, // №
+        { wch: 70 }, // Наименование товара
+        { wch: 15 }, // Количество
+        { wch: 20 }, // Цена
     ];
 
-    const range = XLSX.utils.decode_range(ws["!ref"]);
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-        for (let C = range.s.c; C <= range.e.c; ++C) {
-            const cell = ws[XLSX.utils.encode_cell({ r: R, c: C })];
-            if (cell) {
-                cell.s = {
-                    border: {
-                        top: { style: "thin", color: { rgb: "000000" } },
-                        bottom: { style: "thin", color: { rgb: "000000" } },
-                        left: { style: "thin", color: { rgb: "000000" } },
-                        right: { style: "thin", color: { rgb: "000000" } },
-                    },
-                };
-            }
-        }
-    }
-
+    // Create Workbook and Append Sheet
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Order Details");
 
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array", cellStyles: true });
+    // Export Workbook
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(blob, `${fileName}.xlsx`);
 };
