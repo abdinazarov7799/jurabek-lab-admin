@@ -3,13 +3,14 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {get} from "lodash";
 import useGetOneQuery from "../../../hooks/api/useGetOneQuery.js";
-import {Button, Col, Divider, Image, InputNumber, Popconfirm, Row, Select, Space, Spin, Typography} from "antd";
+import {Button, Col, Image, InputNumber, Popconfirm, Row, Select, Space, Spin, Typography} from "antd";
 import {useTranslation} from "react-i18next";
 import dayjs from "dayjs";
-import {CloseOutlined} from "@ant-design/icons";
+import {CloseOutlined, FileExcelOutlined} from "@ant-design/icons";
 import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 import usePatchQuery from "../../../hooks/api/usePutQuery.js";
 const {Text,Title} = Typography;
+import exportToExcel from "./exportToExcel";
 
 const OrderEdit = ({selected,setSelected,getStatusColor}) => {
     const id = get(selected,'id')
@@ -108,9 +109,20 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
         });
     };
 
+    const handleExport = () => {
+        exportToExcel(order,`${t("Order_details")}_${get(selected,'userPhone')}`)
+    }
+
     return (
-        <div>
-            <Divider style={{marginTop: 0}}/>
+        <Space direction={"vertical"} style={{width:'100%'}} size={"middle"}>
+            <Button
+                type={"primary"}
+                block
+                icon={<FileExcelOutlined />}
+                onClick={handleExport}
+            >
+                {t("Export to excel")}
+            </Button>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
                 <Row justify={"space-between"} align={"middle"}>
                     <Title level={5}>{t("Full name")}</Title>
@@ -225,7 +237,7 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
                 </Row>
                 <Button type={"primary"} block onClick={onEditOrder} loading={isLoadingEdit}>{t("Save")}</Button>
             </Space>
-        </div>
+        </Space>
     );
 };
 
