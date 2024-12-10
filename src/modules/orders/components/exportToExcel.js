@@ -13,7 +13,7 @@ const exportToExcel = (data, fileName) => {
     }));
 
     const generalInfo = [
-        { Field: "ID", Value: get(data,'id') },
+        { Field: "ID", Value: `${get(data,'id')}` },
         { Field: "Full Name", Value: get(data,'fullName') },
         { Field: "Address", Value: get(data,'address') },
         { Field: "INN", Value: get(data,'inn') },
@@ -21,7 +21,7 @@ const exportToExcel = (data, fileName) => {
         { Field: "Phone Number", Value: get(data,'phoneNumber') },
         { Field: "User Phone", Value: get(data,'userPhone') },
         { Field: "Status", Value: get(data,'status') },
-        { Field: "Total Price", Value: get(data,'totalPrice') },
+        { Field: "Total Price", Value: `${Intl.NumberFormat('en-US').format(get(data,'totalPrice',0))} so'm`, },
     ];
 
     const wsGeneral = XLSX.utils.json_to_sheet(generalInfo);
