@@ -115,14 +115,15 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
 
     return (
         <Space direction={"vertical"} style={{width:'100%'}} size={"middle"}>
-            <Button
-                type={"primary"}
-                block
-                icon={<FileExcelOutlined />}
-                onClick={handleExport}
-            >
-                {t("Export to excel")}
-            </Button>
+            <Row justify={"end"}>
+                <Button
+                    type={"primary"}
+                    icon={<FileExcelOutlined />}
+                    onClick={handleExport}
+                >
+                    {t("Export to excel")}
+                </Button>
+            </Row>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
                 <Row justify={"space-between"} align={"middle"}>
                     <Title level={5}>{t("Full name")}</Title>
