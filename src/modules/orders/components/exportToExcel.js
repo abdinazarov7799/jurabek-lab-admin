@@ -27,6 +27,20 @@ const exportToExcel = (data, fileName) => {
     const wsGeneral = XLSX.utils.json_to_sheet(generalInfo);
     const wsProducts = XLSX.utils.json_to_sheet(formattedProducts);
 
+    wsGeneral["!cols"] = [
+        { wch: 50 },
+        { wch: 80 },
+    ];
+
+    wsProducts["!cols"] = [
+        { wch: 10 },
+        { wch: 100 },
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 200 },
+    ];
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, wsGeneral, "General Info");
     XLSX.utils.book_append_sheet(wb, wsProducts, "Products");
