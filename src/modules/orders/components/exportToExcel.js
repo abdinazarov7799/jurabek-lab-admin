@@ -7,7 +7,7 @@ const exportToExcel = (data, fileName) => {
     const generalInfo = [
         ["Накладная", "(Мобильное приложение)","Дата", new Date().toLocaleDateString()],
         [],
-        ["Клиент", get(data, "fullName"), "", ""],
+        ["Клиент", get(data, "pharmacy"), "", ""],
         ["Телефон", get(data, "phoneNumber"), "", ""],
         ["Адрес", get(data, "address"), "", ""],
         ["ИНН", get(data, "inn"), "", ""],
