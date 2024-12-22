@@ -22,7 +22,7 @@ const DashboardSidebar = () => {
         {
             label: t("Orders"),
             key: "/orders",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN],
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             label: t("Products"),

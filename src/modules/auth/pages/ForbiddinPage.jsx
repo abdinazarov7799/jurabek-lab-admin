@@ -3,7 +3,7 @@ import {Button, Result} from "antd";
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 
-const ForbiddinPage = ({...rest}) => {
+const ForbiddenPage = () => {
     const {t} = useTranslation()
     const navigate = useNavigate()
     return (
@@ -18,4 +18,4 @@ const ForbiddinPage = ({...rest}) => {
     );
 };
 
-export default ForbiddinPage;
+export default ForbiddenPage;
