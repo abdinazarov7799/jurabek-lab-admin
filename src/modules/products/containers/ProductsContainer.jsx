@@ -4,7 +4,20 @@ import {useTranslation} from "react-i18next";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
-import {Button, Flex, Image, Input, message, Modal, Pagination, Popconfirm, Row, Space, Table, Upload} from "antd";
+import {
+    Button,
+    Flex,
+    Image,
+    Input,
+    message,
+    Modal,
+    Pagination,
+    Popconfirm,
+    Row,
+    Space, Switch,
+    Table,
+    Upload
+} from "antd";
 import Container from "../../../components/Container.jsx";
 import {DeleteOutlined, EditOutlined, InboxOutlined, UploadOutlined} from "@ant-design/icons";
 import usePostQuery from "../../../hooks/api/usePostQuery.js";
@@ -109,6 +122,13 @@ const ProductsContainer = () => {
         mutateDelete({url: `${URLS.product_delete}/${id}`})
     }
 
+    const handleChangeActive = (isActive,productId) => {
+        mutate({
+            url: `${URLS.product_edit}/${productId}`,
+            attributes: {isActive},
+        })
+    }
+
     const columns = [
         {
             title: t("ID"),
@@ -131,6 +151,12 @@ const ProductsContainer = () => {
             dataIndex: "price",
             key: "price",
             render: (price) => Number(price).toLocaleString("en-US")
+        },
+        {
+            title: t("Is Active"),
+            dataIndex: "isActive",
+            key: "isActive",
+            render: (checked,data) => <Switch value={checked} onClick={() => handleChangeActive(!checked,get(data,'id'))} />
         },
         {
             title: t("Edit"),
