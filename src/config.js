@@ -5,7 +5,7 @@ const config = {
     ROLE_SUPER_ADMIN: "ROLE_SUPER_ADMIN",
     ROLE_ADMIN: "ROLE_ADMIN",
     ROLE_USER: "ROLE_USER",
-    ROLE_ORDER_MANAGER: "ORDER_MANAGER",
+    ROLE_ORDER_MANAGER: "ROLE_ORDER_MANAGER",
   }
 }
 export default config;
