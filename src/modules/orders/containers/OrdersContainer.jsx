@@ -10,6 +10,9 @@ import {CheckOutlined, CloseOutlined, EditOutlined} from "@ant-design/icons";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
 import OrderEdit from "../components/OrderEdit.jsx";
 import dayjs from "dayjs";
+import {hasAccess} from "../../../services/auth/HasAccess.jsx";
+import {useStore} from "../../../store/index.js";
+import config from "../../../config.js";
 const {Text} = Typography;
 
 const OrdersContainer = () => {
@@ -17,6 +20,7 @@ const OrdersContainer = () => {
     const [page, setPage] = useState(0);
     const [selected, setSelected] = useState(null);
     const { t } = useTranslation();
+    const user = useStore(state => get(state,'user',{}))
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.order_list,
@@ -50,43 +54,51 @@ const OrdersContainer = () => {
             title: t("ID"),
             dataIndex: "id",
             key: "id",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             title: t("Full name"),
             dataIndex: "fullName",
-            key: "fullName"
+            key: "fullName",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             title: t("User phone"),
             dataIndex: "userPhone",
-            key: "userPhone"
+            key: "userPhone",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             title: t("Pharmacy"),
             dataIndex: "pharmacy",
-            key: "pharmacy"
+            key: "pharmacy",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             title: t("INN"),
             dataIndex: "inn",
-            key: "inn"
+            key: "inn",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             title: t("Phone number"),
             dataIndex: "phoneNumber",
-            key: "phoneNumber"
+            key: "phoneNumber",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             title: t("Status"),
             dataIndex: "status",
             key: "status",
-            render: (text) => <Text type={getStatusColor(text)}>{text}</Text>
+            render: (text) => <Text type={getStatusColor(text)}>{text}</Text>,
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             title: t("Total price"),
             dataIndex: "totalPrice",
             key: "totalPrice",
-            render: (price) => Number(price).toLocaleString("en-US")
+            render: (price) => Number(price).toLocaleString("en-US"),
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             title: t("Created time"),
@@ -94,6 +106,7 @@ const OrdersContainer = () => {
             key: "createdTime",
             width: 120,
             render: (time) => dayjs(time).format("YYYY-MM-DD HH:mm:ss"),
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             title: t("Updated time"),
@@ -101,11 +114,13 @@ const OrdersContainer = () => {
             key: "updatedTime",
             width: 120,
             render: (time) => dayjs(time).format("YYYY-MM-DD HH:mm:ss"),
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             title: t("Updated by"),
             dataIndex: "updatedBy",
-            key: "updatedBy"
+            key: "updatedBy",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             title: t("Edit"),
@@ -116,13 +131,15 @@ const OrdersContainer = () => {
                 <Button icon={<EditOutlined />} onClick={() => {
                     setSelected(data)
                 }} />
-            )
+            ),
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
         },
         {
             title: t("Reject / Accept"),
             width: 90,
             fixed: 'right',
             key: 'action',
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN],
             render: (props, data) => {
                 if (!isEqual(get(data,'status'),'SENT')){
                     return <></>
@@ -152,7 +169,9 @@ const OrdersContainer = () => {
                 }
             }
         }
-    ]
+    ].filter((item) => {
+        return hasAccess(get(user,'roles',[]),get(item,'access'));
+    });
     return (
         <Container>
             <Modal
