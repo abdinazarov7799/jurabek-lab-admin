@@ -96,6 +96,18 @@ const OrdersContainer = () => {
             render: (time) => dayjs(time).format("YYYY-MM-DD HH:mm:ss"),
         },
         {
+            title: t("Updated time"),
+            dataIndex: "updatedTime",
+            key: "updatedTime",
+            width: 120,
+            render: (time) => dayjs(time).format("YYYY-MM-DD HH:mm:ss"),
+        },
+        {
+            title: t("Updated by"),
+            dataIndex: "updatedBy",
+            key: "updatedBy"
+        },
+        {
             title: t("Edit"),
             width: 50,
             fixed: 'right',
