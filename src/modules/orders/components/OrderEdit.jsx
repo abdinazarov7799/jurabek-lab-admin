@@ -23,8 +23,10 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
         key: `${KEYS.order_products}_${id}`,
         url: URLS.order_products,
         params: {
-            page: 0,
-            size: 1000
+            params: {
+                page: 0,
+                size: 1000
+            }
         },
         enabled: !!id
     })
