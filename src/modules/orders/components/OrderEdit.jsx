@@ -3,7 +3,7 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {get} from "lodash";
 import useGetOneQuery from "../../../hooks/api/useGetOneQuery.js";
-import {Button, Col, Image, InputNumber, Popconfirm, Row, Select, Space, Spin, Typography} from "antd";
+import {Button, Col, Divider, Image, InputNumber, Popconfirm, Row, Select, Space, Spin, Typography} from "antd";
 import {useTranslation} from "react-i18next";
 import dayjs from "dayjs";
 import {CloseOutlined, FileExcelOutlined} from "@ant-design/icons";
@@ -111,6 +111,16 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
         });
     };
 
+    const onChangeDiscount = (id, discountPercent) => {
+        const updatedProducts = get(order, 'products', []).map(product =>
+            product.id === id ? { ...product, discountPercent } : product
+        );
+        setOrder({
+            ...order,
+            products: updatedProducts
+        });
+    };
+
     const handleExport = () => {
         exportToExcel(order,`${t("Order_details")}_${get(selected,'userPhone')}`)
     }
@@ -134,6 +144,10 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
                 <Row justify={"space-between"} align={"middle"}>
                     <Title level={5}>{t("User phone")}</Title>
                     <Text>{get(order,'userPhone')}</Text>
+                </Row>
+                <Row justify={"space-between"} align={"middle"}>
+                    <Title level={5}>{t("Region")}</Title>
+                    <Text>{get(order,'region')}</Text>
                 </Row>
                 <Row justify={"space-between"} align={"middle"}>
                     <Title level={5}>{t("Address")}</Title>
@@ -163,6 +177,7 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
                     <Title level={5}>{t("Status")}</Title>
                     <Text type={getStatusColor(get(order,'status'))}>{get(order,'status')}</Text>
                 </Row>
+                <Divider style={{margin: 0}}>{t("Products")}</Divider>
                 <Spin spinning={isLoading}>
                     <Space direction={"vertical"} style={{width: "100%"}} >
                         {
@@ -172,19 +187,26 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
                                         <Col span={2}>
                                             <Image src={get(product,'imageUrl')} width={50} height={50} />
                                         </Col>
-                                        <Col span={12}>
+                                        <Col span={9}>
                                             <Text ellipsis>{get(product,'name')}{get(product,'name')}{get(product,'name')}{get(product,'name')}{get(product,'name')}{get(product,'name')}</Text>
                                         </Col>
-                                        <Col>
+                                        <Col span={3}>
                                             <Text>{get(product,'price')?.toLocaleString("en-US")} {t("so'm")}</Text>
                                         </Col>
                                         <Col span={3}>
                                             <InputNumber
-                                                style={{width:80}}
                                                 type={"number"}
                                                 value={get(product,'quantity')}
                                                 min={0}
                                                 onChange={(value) => onChangeQuantity(get(product, 'id'), value)}
+                                            />
+                                        </Col>
+                                        <Col span={3}>
+                                            <InputNumber
+                                                type={"number"}
+                                                value={get(product,'discountPercent')}
+                                                min={0}
+                                                onChange={(value) => onChangeDiscount(get(product, 'id'), value)}
                                             />
                                         </Col>
                                         <Col span={3}>
