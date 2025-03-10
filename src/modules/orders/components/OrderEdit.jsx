@@ -61,7 +61,7 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
             url: `${URLS.order_edit}/${get(selected,'id')}`,
             attributes: {
                 pharmacyPhoneNumber: get(selected,'phoneNumber'),
-                products: get(order,'products')?.map(product=> ({productId: get(product,'id'), quantity: get(product,'quantity')})),
+                products: get(order,'products')?.map(product=> ({productId: get(product,'id'), quantity: get(product,'quantity'), dicountPercent: get(product,'dicountPercent')})),
             }
         },{
             onSuccess: () => {
@@ -89,7 +89,8 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
             if (!existingProduct) {
                 updatedOrderProducts.push({
                     ...get(selectedProduct, 'productData'),
-                    quantity: 1
+                    quantity: 1,
+                    dicountPercent: 0
                 });
             }
         });
