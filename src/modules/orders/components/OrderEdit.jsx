@@ -61,7 +61,7 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
             url: `${URLS.order_edit}/${get(selected,'id')}`,
             attributes: {
                 pharmacyPhoneNumber: get(selected,'phoneNumber'),
-                products: get(order,'products')?.map(product=> ({productId: get(product,'id'), quantity: get(product,'quantity'), discountPercent: get(product,'discountPercent')})),
+                products: get(order,'products')?.map(product=> ({productId: get(product,'id'), quantity: get(product,'quantity'), discountPercent: get(product,'discountPercent') ?? 0})),
             }
         },{
             onSuccess: () => {
