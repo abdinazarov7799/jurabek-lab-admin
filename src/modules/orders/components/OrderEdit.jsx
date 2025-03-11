@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
-import {get} from "lodash";
+import {get, isArray} from "lodash";
 import useGetOneQuery from "../../../hooks/api/useGetOneQuery.js";
 import {Button, Col, Divider, Image, InputNumber, Popconfirm, Row, Select, Space, Spin, Typography} from "antd";
 import {useTranslation} from "react-i18next";
@@ -18,6 +18,7 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
     const [order,setOrder] = useState(selected)
     const [search,setSearch] = useState(null)
     const [selectedProducts,setSelectedProducts] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
     const {data,isLoading} = useGetOneQuery({
         id,
         key: `${KEYS.order_products}_${id}`,
@@ -55,6 +56,18 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
             products: get(data,'data.content',[])
         })
     },[selected,data])
+
+    useEffect(() => {
+        let totalPrice = 0
+
+        if (isArray(get(order,'products'))) {
+            get(order,'products',[])?.map(product => {
+                totalPrice+= get(product,'quantity') * get(product,'price') * (1-get(product,'discountPercent') / 100)
+            })
+        }
+
+        setTotalPrice(totalPrice)
+    },[order])
 
     const onEditOrder = () => {
         mutate({
@@ -172,7 +185,7 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
                 </Row>
                 <Row justify={"space-between"} align={"middle"}>
                     <Title level={5}>{t("Total price")}</Title>
-                    <Text>{Number(get(order,'totalPrice')).toLocaleString("en-US")} {t("so'm")}</Text>
+                    <Text>{Number(totalPrice).toLocaleString("en-US")} {t("so'm")}</Text>
                 </Row>
                 <Row justify={"space-between"} align={"middle"}>
                     <Title level={5}>{t("Status")}</Title>
@@ -180,7 +193,34 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
                 </Row>
                 <Divider style={{margin: 0}}>{t("Products")}</Divider>
                 <Spin spinning={isLoading}>
-                    <Space direction={"vertical"} style={{width: "100%"}} >
+                    <Space direction={"vertical"} style={{width: "100%"}}>
+                        <Row gutter={10}>
+                            <Col span={2}>
+                                <Text>{t("Image")}</Text>
+                            </Col>
+                            <Col span={6}>
+                                <Text>{t("Product name")}</Text>
+                            </Col>
+                            <Col span={3}>
+                                <Text>{t("Product price")}</Text>
+                            </Col>
+                            <Col span={3}>
+                                <Text>{t("Count")}</Text>
+                            </Col>
+                            <Col span={3}>
+                                <Text>{t("Discount")}</Text>
+                            </Col>
+                            <Col span={3}>
+                                <Text>{t("Total summ")}</Text>
+                            </Col>
+                            <Col span={3}>
+                                <Text>{t("Total summ with discount")}</Text>
+                            </Col>
+                            <Col span={1}>
+                                <Text>{t("Delete")}</Text>
+                            </Col>
+                        </Row>
+                        <Divider style={{margin: 0}}/>
                         {
                             get(order,'products',[])?.map(product => {
                                 return (
@@ -188,8 +228,8 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
                                         <Col span={2}>
                                             <Image src={get(product,'imageUrl')} width={50} height={50} />
                                         </Col>
-                                        <Col span={9}>
-                                            <Text ellipsis>{get(product,'name')}{get(product,'name')}{get(product,'name')}{get(product,'name')}{get(product,'name')}{get(product,'name')}</Text>
+                                        <Col span={6}>
+                                            <Text ellipsis>{get(product,'name')}</Text>
                                         </Col>
                                         <Col span={3}>
                                             <Text>{get(product,'price')?.toLocaleString("en-US")} {t("so'm")}</Text>
@@ -206,12 +246,16 @@ const OrderEdit = ({selected,setSelected,getStatusColor}) => {
                                             <InputNumber
                                                 type={"number"}
                                                 value={get(product,'discountPercent')}
+                                                defaultValue={0}
                                                 min={0}
                                                 onChange={(value) => onChangeDiscount(get(product, 'id'), value)}
                                             />
                                         </Col>
                                         <Col span={3}>
                                             <Text>{Number(get(product,'price') * get(product,'quantity'))?.toLocaleString("en-US")} {t("so'm")}</Text>
+                                        </Col>
+                                        <Col span={3}>
+                                            <Text underline>{Number(get(product,'price') * get(product,'quantity') * (1-get(product,'discountPercent',0) / 100))?.toLocaleString("en-US")} {t("so'm")}</Text>
                                         </Col>
                                         <Col span={1}>
                                             <Popconfirm

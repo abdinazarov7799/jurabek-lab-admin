@@ -179,7 +179,7 @@ const OrdersContainer = () => {
                 open={!!selected}
                 onCancel={() => {setSelected(null)}}
                 footer={null}
-                width={1100}
+                width={1300}
             >
                 <OrderEdit selected={selected} setSelected={setSelected} getStatusColor={getStatusColor}/>
             </Modal>
