@@ -26,6 +26,7 @@ import PharmaciesPage from "../modules/pharmacies/pages/PharmaciesPage.jsx";
 import TranslationPage from "../modules/translations/pages/TranslationPage.jsx";
 import ConstantsPage from "../modules/constants/pages/ConstantsPage.jsx";
 import TransactionPage from "../modules/transactions/pages/TransactionPage.jsx";
+import OrderViewPage from "../modules/orders/pages/OrderViewPage.jsx";
 // PAGES
 
 
@@ -51,6 +52,10 @@ const Router = () => {
               <Route
                   path={"/orders"}
                   element={<OrdersPage />}
+              />
+              <Route
+                  path={"/order/view/:id"}
+                  element={<OrderViewPage />}
               />
               <Route
                   path={"/pharmacies"}

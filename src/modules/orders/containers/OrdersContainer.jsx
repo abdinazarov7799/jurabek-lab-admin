@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import {hasAccess} from "../../../services/auth/HasAccess.jsx";
 import {useStore} from "../../../store/index.js";
 import config from "../../../config.js";
+import {useNavigate} from "react-router-dom";
 const {Text} = Typography;
 
 const OrdersContainer = () => {
@@ -20,6 +21,7 @@ const OrdersContainer = () => {
     const [page, setPage] = useState(0);
     const [selected, setSelected] = useState(null);
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const user = useStore(state => get(state,'user',{}))
 
     const {data,isLoading} = usePaginateQuery({
@@ -47,7 +49,6 @@ const OrdersContainer = () => {
             case "SENT" : return "warning"
         }
     }
-
 
     const columns = [
         {
@@ -199,6 +200,9 @@ const OrdersContainer = () => {
                     size={"middle"}
                     pagination={false}
                     loading={isLoading}
+                    onRow={(props) => {
+                        return {onDoubleClick: () => navigate(`/order/view/${get(props,'id')}`)}
+                    }}
                 />
 
                 <Row justify={"end"} style={{marginTop: 10}}>
