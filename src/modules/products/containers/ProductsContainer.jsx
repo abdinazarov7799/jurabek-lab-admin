@@ -26,18 +26,19 @@ import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
 import ImgCrop from "antd-img-crop";
 import Resizer from "react-image-file-resizer";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
-const { Dragger } = Upload;
+
+const {Dragger} = Upload;
 
 const ProductsContainer = () => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [page, setPage] = useState(0);
-    const [searchKey,setSearchKey] = useState();
+    const [searchKey, setSearchKey] = useState();
     const [selected, setSelected] = useState(null);
-    const [imageUrl,setImgUrl] = useState(null);
-    const [description,setDescription] = useState(null);
+    const [imageUrl, setImgUrl] = useState(null);
+    const [description, setDescription] = useState(null);
     const [editForm] = Form.useForm();
 
-    const {data,isLoading} = usePaginateQuery({
+    const {data, isLoading} = usePaginateQuery({
         key: KEYS.product_list,
         url: URLS.product_list,
         params: {
@@ -49,8 +50,8 @@ const ProductsContainer = () => {
         page
     });
 
-    const { mutate:fileUpload } = usePostQuery({});
-    const { mutate:UploadImage } = usePostQuery({});
+    const {mutate: fileUpload} = usePostQuery({});
+    const {mutate: UploadImage} = usePostQuery({});
     const {mutate} = usePatchQuery({listKeyId: KEYS.product_list})
 
     const resizeFile = (file) =>
@@ -76,19 +77,19 @@ const ProductsContainer = () => {
         }
         const uri = await resizeFile(file);
         const resizedImage = await fetch(uri).then(res => res.blob());
-        return new Blob([resizedImage],{ type: "webp"});
+        return new Blob([resizedImage], {type: "webp"});
     };
     const customRequestImage = async (options) => {
-        const { file, onSuccess, onError } = options;
+        const {file, onSuccess, onError} = options;
         const formData = new FormData();
         formData.append('file', file);
         UploadImage(
-            { url: URLS.upload_file, attributes: formData, config: { headers: { 'Content-Type': 'multipart/form-data' } } },
+            {url: URLS.upload_file, attributes: formData, config: {headers: {'Content-Type': 'multipart/form-data'}}},
             {
-                onSuccess: ({ data }) => {
+                onSuccess: ({data}) => {
                     onSuccess(true);
                     setImgUrl(data);
-                    editForm.setFieldsValue({ imageUrl: data });
+                    editForm.setFieldsValue({imageUrl: data});
                 },
                 onError: (err) => {
                     onError(err);
@@ -98,45 +99,45 @@ const ProductsContainer = () => {
     };
 
     const handleOk = () => {
-  editForm.submit();
-};
+        editForm.submit();
+    };
 
-const onCancel = () => {
-  setSelected(null);
-  setImgUrl(null);
-  editForm.resetFields();
-};
-
-    const onEditFinish = (values: any) => {
-  mutate(
-    {
-      url: `${URLS.product_edit}/${get(selected, "id")}`,
-      attributes: {
-        name: values.name?.trim(),
-        description: values.description ?? null,
-        imageUrl: imageUrl ?? values.imageUrl ?? null,
-        isActive: !!values.isActive,
-        price: values.price ?? null,
-      },
-    },
-    {
-      onSuccess: () => {
-        setImgUrl(null);
+    const onCancel = () => {
         setSelected(null);
-      },
-    }
-  );
-};
+        setImgUrl(null);
+        editForm.resetFields();
+    };
+
+    const onEditFinish = (values) => {
+        mutate(
+            {
+                url: `${URLS.product_edit}/${get(selected, "id")}`,
+                attributes: {
+                    name: values.name?.trim(),
+                    description: values.description ?? null,
+                    imageUrl: imageUrl ?? values.imageUrl ?? null,
+                    isActive: !!values.isActive,
+                    price: values.price ?? null,
+                },
+            },
+            {
+                onSuccess: () => {
+                    setImgUrl(null);
+                    setSelected(null);
+                },
+            }
+        );
+    };
 
 
-    const { mutate:mutateDelete } = useDeleteQuery({
+    const {mutate: mutateDelete} = useDeleteQuery({
         listKeyId: KEYS.product_list
     });
     const useDelete = (id) => {
         mutateDelete({url: `${URLS.product_delete}/${id}`})
     }
 
-    const handleChangeActive = (isActive,productId) => {
+    const handleChangeActive = (isActive, productId) => {
         mutate({
             url: `${URLS.product_edit}/${productId}`,
             attributes: {isActive},
@@ -170,14 +171,15 @@ const onCancel = () => {
             title: t("Is Active"),
             dataIndex: "isActive",
             key: "isActive",
-            render: (checked,data) => <Switch value={checked} onClick={() => handleChangeActive(!checked,get(data,'id'))} />
+            render: (checked, data) => <Switch value={checked}
+                                               onClick={() => handleChangeActive(!checked, get(data, 'id'))}/>
         },
         {
             title: t("Edit"),
             key: "edit",
             width: 50,
             render: (data) => (
-                <Button icon={<EditOutlined />} onClick={() => setSelected(data)} />
+                <Button icon={<EditOutlined/>} onClick={() => setSelected(data)}/>
             )
         },
         {
@@ -189,22 +191,26 @@ const onCancel = () => {
                 <Popconfirm
                     title={t("Delete")}
                     description={t("Are you sure to delete?")}
-                    onConfirm={() => useDelete(get(data,'id'))}
+                    onConfirm={() => useDelete(get(data, 'id'))}
                     okText={t("Yes")}
                     cancelText={t("No")}
                 >
-                    <Button danger icon={<DeleteOutlined />}/>
+                    <Button danger icon={<DeleteOutlined/>}/>
                 </Popconfirm>
             )
         }
     ]
 
     const customRequest = async (options) => {
-        const { file, onSuccess, onError } = options;
+        const {file, onSuccess, onError} = options;
         const formData = new FormData();
         formData.append('file', file);
         fileUpload(
-            { url: URLS.product_add, attributes: formData, config: { headers: { 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel' } } },
+            {
+                url: URLS.product_add,
+                attributes: formData,
+                config: {headers: {'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'}}
+            },
             {
                 onSuccess: () => {
                     onSuccess(true);
@@ -216,107 +222,107 @@ const onCancel = () => {
         );
     };
 
-   useEffect(() => {
-  if (selected) {
-    setImgUrl(get(selected, "imageUrl") || null);
-    editForm.setFieldsValue({
-      name: get(selected, "name"),
-      description: get(selected, "description"),
-      isActive: get(selected, "isActive"),
-      price: get(selected, "price"),
-      imageUrl: get(selected, "imageUrl"),
-    });
-  } else {
-    editForm.resetFields();
-    setImgUrl(null);
-  }
-}, [selected]);
+    useEffect(() => {
+        if (selected) {
+            setImgUrl(get(selected, "imageUrl") || null);
+            editForm.setFieldsValue({
+                name: get(selected, "name"),
+                description: get(selected, "description"),
+                isActive: get(selected, "isActive"),
+                price: get(selected, "price"),
+                imageUrl: get(selected, "imageUrl"),
+            });
+        } else {
+            editForm.resetFields();
+            setImgUrl(null);
+        }
+    }, [selected]);
 
-    return(
+    return (
         <Container>
             {selected && (
-  <Modal
-    title={get(selected, "name")}
-    open={!!selected}
-    onCancel={onCancel}
-    onOk={handleOk}
-    destroyOnClose
-  >
-    <Form
-      form={editForm}
-      layout="vertical"
-      onFinish={onEditFinish}
-      initialValues={{
-        // xavfsizlik uchun defaultlar
-        isActive: true,
-      }}
-    >
-      {/* Name */}
-      <Form.Item
-        name="name"
-        label={t("Name")}
-        rules={[{ required: true, message: t("Name is required") }]}
-      >
-        <Input placeholder={t("Enter name")} />
-      </Form.Item>
+                <Modal
+                    title={get(selected, "name")}
+                    open={!!selected}
+                    onCancel={onCancel}
+                    onOk={handleOk}
+                    destroyOnClose
+                >
+                    <Form
+                        form={editForm}
+                        layout="vertical"
+                        onFinish={onEditFinish}
+                        initialValues={{
+                            // xavfsizlik uchun defaultlar
+                            isActive: true,
+                        }}
+                    >
+                        {/* Name */}
+                        <Form.Item
+                            name="name"
+                            label={t("Name")}
+                            rules={[{required: true, message: t("Name is required")}]}
+                        >
+                            <Input placeholder={t("Enter name")}/>
+                        </Form.Item>
 
-      {/* Price */}
-      <Form.Item
-        name="price"
-        label={t("Price")}
-        rules={[{ type: "number", min: 0, message: t("Price must be >= 0") }]}
-      >
-        <InputNumber
-          style={{ width: "100%" }}
-          placeholder={t("Enter price")}
-          formatter={(v) =>
-            `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-          }
-          parser={(v) => (v ? Number(v.replace(/,/g, "")) : undefined)}
-        />
-      </Form.Item>
+                        {/* Price */}
+                        <Form.Item
+                            name="price"
+                            label={t("Price")}
+                            rules={[{type: "number", min: 0, message: t("Price must be >= 0")}]}
+                        >
+                            <InputNumber
+                                style={{width: "100%"}}
+                                placeholder={t("Enter price")}
+                                formatter={(v) =>
+                                    `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                }
+                                parser={(v) => (v ? Number(v.replace(/,/g, "")) : undefined)}
+                            />
+                        </Form.Item>
 
-      {/* IsActive */}
-      <Form.Item name="isActive" label={t("Is Active")} valuePropName="checked">
-        <Switch />
-      </Form.Item>
+                        {/* IsActive */}
+                        <Form.Item name="isActive" label={t("Is Active")} valuePropName="checked">
+                            <Switch/>
+                        </Form.Item>
 
-      {/* Image preview + upload */}
-      <Form.Item name="imageUrl" label={t("Image URL")} hidden>
-        <Input />
-      </Form.Item>
+                        {/* Image preview + upload */}
+                        <Form.Item name="imageUrl" label={t("Image URL")} hidden>
+                            <Input/>
+                        </Form.Item>
 
-      <Space direction="vertical" style={{ width: "100%" }} size="middle">
-        <Flex justify="center">
-          <Image src={imageUrl} width={300} height={300} fallback="" />
-        </Flex>
+                        <Space direction="vertical" style={{width: "100%"}} size="middle">
+                            <Flex justify="center">
+                                <Image src={imageUrl} width={300} height={300} fallback=""/>
+                            </Flex>
 
-        <ImgCrop quality={0.5} aspect={1} showGrid rotationSlider minZoom={-1}>
-          <Dragger
-            maxCount={1}
-            multiple={false}
-            accept=".jpg,.png,.jpeg,.svg,.webp"
-            customRequest={customRequestImage}
-            beforeUpload={beforeUpload}
-            showUploadList={{ showRemoveIcon: false }}
-          >
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              {t("Click or drag file to this area to upload")}
-            </p>
-          </Dragger>
-        </ImgCrop>
-      </Space>
+                            <ImgCrop quality={0.5} aspect={1} showGrid rotationSlider minZoom={-1}>
+                                <Dragger
+                                    maxCount={1}
+                                    multiple={false}
+                                    accept=".jpg,.png,.jpeg,.svg,.webp"
+                                    customRequest={customRequestImage}
+                                    beforeUpload={beforeUpload}
+                                    showUploadList={{showRemoveIcon: false}}
+                                >
+                                    <p className="ant-upload-drag-icon">
+                                        <InboxOutlined/>
+                                    </p>
+                                    <p className="ant-upload-text">
+                                        {t("Click or drag file to this area to upload")}
+                                    </p>
+                                </Dragger>
+                            </ImgCrop>
+                        </Space>
 
-      {/* Description */}
-      <Form.Item name="description" label={t("Description")}>
-        <Input.TextArea rows={4} placeholder={t("Enter description")} />
-      </Form.Item>
-    </Form>
-  </Modal>
-)}
+                        {/* Description */}
+                        <Form.Item name="description" label={t("Description")}>
+                            <Input.TextArea rows={4} placeholder={t("Enter description")}/>
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )}
 
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
                 <Space size={"middle"}>
@@ -329,15 +335,15 @@ const onCancel = () => {
                         accept={"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"}
                         multiple={false}
                         customRequest={customRequest}
-                        showUploadList={{showRemoveIcon:false}}
+                        showUploadList={{showRemoveIcon: false}}
                     >
-                        <Button icon={<UploadOutlined />}>{t("Upload excel file")}</Button>
+                        <Button icon={<UploadOutlined/>}>{t("Upload excel file")}</Button>
                     </Upload>
                 </Space>
 
                 <Table
                     columns={columns}
-                    dataSource={get(data,'data.content',[])}
+                    dataSource={get(data, 'data.content', [])}
                     bordered
                     size={"middle"}
                     pagination={false}
@@ -346,9 +352,9 @@ const onCancel = () => {
 
                 <Row justify={"end"} style={{marginTop: 10}}>
                     <Pagination
-                        current={page+1}
+                        current={page + 1}
                         onChange={(page) => setPage(page - 1)}
-                        total={get(data,'data.totalPages') * 10 }
+                        total={get(data, 'data.totalPages') * 10}
                         showSizeChanger={false}
                     />
                 </Row>
