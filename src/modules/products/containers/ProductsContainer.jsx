@@ -16,7 +16,8 @@ import {
     Row,
     Space, Switch,
     Table,
-    Upload
+    Upload,
+    Form, InputNumber
 } from "antd";
 import Container from "../../../components/Container.jsx";
 import {DeleteOutlined, EditOutlined, InboxOutlined, UploadOutlined} from "@ant-design/icons";
@@ -34,6 +35,7 @@ const ProductsContainer = () => {
     const [selected, setSelected] = useState(null);
     const [imageUrl,setImgUrl] = useState(null);
     const [description,setDescription] = useState(null);
+    const [editForm] = Form.useForm();
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.product_list,
@@ -86,6 +88,7 @@ const ProductsContainer = () => {
                 onSuccess: ({ data }) => {
                     onSuccess(true);
                     setImgUrl(data);
+                    editForm.setFieldsValue({ imageUrl: data });
                 },
                 onError: (err) => {
                     onError(err);
@@ -95,25 +98,36 @@ const ProductsContainer = () => {
     };
 
     const handleOk = () => {
-        if (!!imageUrl || !!description) {
-            mutate({
-                url: `${URLS.product_edit}/${get(selected, 'id')}`,
-                attributes: {imageUrl,description},
-            },{
-                onSuccess: () => {
-                    setImgUrl(null)
-                    setSelected(null);
-                }
-            })
-        }else {
-            setSelected(null);
-        }
-    }
+  editForm.submit();
+};
 
-    const onCancel = () => {
-        setSelected(null)
-        setImgUrl(null)
+const onCancel = () => {
+  setSelected(null);
+  setImgUrl(null);
+  editForm.resetFields();
+};
+
+    const onEditFinish = (values: any) => {
+  mutate(
+    {
+      url: `${URLS.product_edit}/${get(selected, "id")}`,
+      attributes: {
+        name: values.name?.trim(),
+        description: values.description ?? null,
+        imageUrl: imageUrl ?? values.imageUrl ?? null,
+        isActive: !!values.isActive,
+        price: values.price ?? null,
+      },
+    },
+    {
+      onSuccess: () => {
+        setImgUrl(null);
+        setSelected(null);
+      },
     }
+  );
+};
+
 
     const { mutate:mutateDelete } = useDeleteQuery({
         listKeyId: KEYS.product_list
@@ -202,44 +216,108 @@ const ProductsContainer = () => {
         );
     };
 
-    useEffect(() => {
-        setDescription(get(selected,'description'));
-        setImgUrl(get(selected,'imageUrl'))
-    }, [selected]);
+   useEffect(() => {
+  if (selected) {
+    setImgUrl(get(selected, "imageUrl") || null);
+    editForm.setFieldsValue({
+      name: get(selected, "name"),
+      description: get(selected, "description"),
+      isActive: get(selected, "isActive"),
+      price: get(selected, "price"),
+      imageUrl: get(selected, "imageUrl"),
+    });
+  } else {
+    editForm.resetFields();
+    setImgUrl(null);
+  }
+}, [selected]);
 
     return(
         <Container>
-            {
-                selected && (
-                    <Modal
-                        title={get(selected,'name')}
-                        open={!!selected}
-                        onCancel={onCancel}
-                        onOk={handleOk}
-                    >
-                        <Space direction="vertical" style={{width:'100%'}} size={"middle"}>
-                            <Flex justify={"center"}>
-                                <Image src={imageUrl} width={400} height={400} />
-                            </Flex>
-                            <ImgCrop quality={0.5} aspect={1} showGrid rotationSlider minZoom={-1}>
-                                <Dragger
-                                    maxCount={1}
-                                    multiple={false}
-                                    accept={".jpg,.png,jpeg,svg"}
-                                    customRequest={customRequestImage}
-                                    beforeUpload={beforeUpload}
-                                >
-                                    <p className="ant-upload-drag-icon">
-                                        <InboxOutlined />
-                                    </p>
-                                    <p className="ant-upload-text">{t("Click or drag file to this area to upload")}</p>
-                                </Dragger>
-                            </ImgCrop>
-                            <Input.TextArea value={description} onChange={e => setDescription(e.target.value)} />
-                        </Space>
-                    </Modal>
-                )
-            }
+            {selected && (
+  <Modal
+    title={get(selected, "name")}
+    open={!!selected}
+    onCancel={onCancel}
+    onOk={handleOk}
+    destroyOnClose
+  >
+    <Form
+      form={editForm}
+      layout="vertical"
+      onFinish={onEditFinish}
+      initialValues={{
+        // xavfsizlik uchun defaultlar
+        isActive: true,
+      }}
+    >
+      {/* Name */}
+      <Form.Item
+        name="name"
+        label={t("Name")}
+        rules={[{ required: true, message: t("Name is required") }]}
+      >
+        <Input placeholder={t("Enter name")} />
+      </Form.Item>
+
+      {/* Price */}
+      <Form.Item
+        name="price"
+        label={t("Price")}
+        rules={[{ type: "number", min: 0, message: t("Price must be >= 0") }]}
+      >
+        <InputNumber
+          style={{ width: "100%" }}
+          placeholder={t("Enter price")}
+          formatter={(v) =>
+            `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          }
+          parser={(v) => (v ? Number(v.replace(/,/g, "")) : undefined)}
+        />
+      </Form.Item>
+
+      {/* IsActive */}
+      <Form.Item name="isActive" label={t("Is Active")} valuePropName="checked">
+        <Switch />
+      </Form.Item>
+
+      {/* Image preview + upload */}
+      <Form.Item name="imageUrl" label={t("Image URL")} hidden>
+        <Input />
+      </Form.Item>
+
+      <Space direction="vertical" style={{ width: "100%" }} size="middle">
+        <Flex justify="center">
+          <Image src={imageUrl} width={300} height={300} fallback="" />
+        </Flex>
+
+        <ImgCrop quality={0.5} aspect={1} showGrid rotationSlider minZoom={-1}>
+          <Dragger
+            maxCount={1}
+            multiple={false}
+            accept=".jpg,.png,.jpeg,.svg,.webp"
+            customRequest={customRequestImage}
+            beforeUpload={beforeUpload}
+            showUploadList={{ showRemoveIcon: false }}
+          >
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">
+              {t("Click or drag file to this area to upload")}
+            </p>
+          </Dragger>
+        </ImgCrop>
+      </Space>
+
+      {/* Description */}
+      <Form.Item name="description" label={t("Description")}>
+        <Input.TextArea rows={4} placeholder={t("Enter description")} />
+      </Form.Item>
+    </Form>
+  </Modal>
+)}
+
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
                 <Space size={"middle"}>
                     <Input.Search
